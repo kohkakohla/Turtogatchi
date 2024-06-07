@@ -2,18 +2,21 @@ name: turtogatchi
 description: "A new Flutter project."
 
 # Prevent accidental publishing to pub.dev.
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.1 <4.0.0'
+  sdk: ">=3.4.1 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  font_awesome_flutter: ^10.7.0
+  google_fonts: ^6.2.1
+  lottie: ^3.1.2
 
 dev_dependencies:
   flutter_test:
@@ -22,6 +25,16 @@ dev_dependencies:
   flutter_lints: ^3.0.0
 
 flutter:
+  fonts:
+    - family: MarioOutlined
+      fonts:
+        - asset: assets/fonts/TypefaceMarioWorldPixelOutlineRegular-MVzKp.ttf
+          weight: 400
+    - family: MarioRegular
+      fonts:
+        - asset: assets/fonts/TypefaceMarioWorldPixelFilledRegular-rgVMx.ttf
+          weight: 400
+
   uses-material-design: true
 
   # Enable generation of localized Strings from arb files.
@@ -29,4 +42,7 @@ flutter:
 
   assets:
     # Add assets from the images directory to the application.
+    - assets/
     - assets/images/
+    - assets/images/splash/
+    - assets/images/gachapage/
