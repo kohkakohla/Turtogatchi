@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turtogatchi/popups/earn_coin_popup.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/popups/settings_popup.dart';
 
-import 'gacha/gacha_page.dart';
+import 'home_buttons.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -70,6 +69,7 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
+                      // TODO THIS IS THE COIN AMOUNT FROM BACKEND.
                       "13",
                       style: GoogleFonts.pressStart2p(
                         textStyle: const TextStyle(
@@ -89,144 +89,12 @@ class HomePage extends StatelessWidget {
                   child: Image.asset("assets/images/home/tigress.png"),
                 ),
               ),
-
+              // TODO THIS IS THE WORM ANIMATION idk how use
+              // SizedBox(
+              //   child: Lottie.asset("assets/images/eating.json"),
+              // ),
               // BUTTONS
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 110,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.6),
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          bottomRight: Radius.circular(20),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          // FEED BUTTON
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                              ),
-                              onPressed: () {},
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    "assets/images/buttons/Spoon.png",
-                                    height: 50,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Text(
-                                      "FEED",
-                                      style: GoogleFonts.pressStart2p(
-                                        textStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 7,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          // EARN BUTTON
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                              ),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const EarnPopup();
-                                  },
-                                );
-                              },
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    "assets/images/buttons/monie.png",
-                                    height: 50,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Text(
-                                      "EARN",
-                                      style: GoogleFonts.pressStart2p(
-                                        textStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 7,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          // GACHA BUTTON
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const GachaPage(),
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    "assets/images/buttons/egg.png",
-                                    height: 50,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Text(
-                                      "HATCH",
-                                      style: GoogleFonts.pressStart2p(
-                                        textStyle: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 7,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              const HomeButtons()
             ],
           ),
 
