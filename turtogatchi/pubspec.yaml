@@ -44,4 +44,5 @@ flutter:
     # Add assets from the images directory to the application.
     - assets/
     - assets/images/
+    - assets/images/splash/
     - assets/images/gachapage/

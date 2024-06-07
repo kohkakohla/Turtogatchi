@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:turtogatchi/home.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -18,36 +19,60 @@ class SplashScreen extends StatelessWidget {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0, // Make AppBar transparent
-            title: const Text(
-              "Gacha Page",
-              style: TextStyle(fontFamily: "MarioRegular"),
-            ),
-            actions: <Widget>[
-              // Inventory button
-              IconButton(
-                icon: Image.asset("assets/images/inventory_icon.png"),
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => InventoryPage()),
-                  // );
-                },
-              ),
+          body: SafeArea(
+            child: Column(
+              children: [
+                // MAIN TITLE TEXT AND LOGO
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "TURTOGOTCHI",
+                    style: TextStyle(fontFamily: "MarioRegular", fontSize: 28),
+                  ),
+                ),
+                // MAIN LOGO
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset("assets/images/splash/splash.png"),
+                ),
 
-              // Settings button
-              IconButton(
-                icon: Image.asset("assets/images/settings_icon.png"),
-                onPressed: () {},
-              )
-            ],
+                // START
+                Padding(
+                  padding: const EdgeInsets.only(top: 180),
+                  child: Center(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(200, 50),
+                        backgroundColor: Colors.white.withOpacity(0.75),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()));
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(28.0),
+                        child: Text(
+                          "START GAME",
+                          style: TextStyle(
+                            fontFamily: "MarioRegular",
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          body: Center(
-            child: Image.asset("assets/images/gacha.png"),
-            // child: Lottie.asset("assets/test.json"),
-          ),
+
+          // Button at bottom right
           floatingActionButton: Align(
             alignment: Alignment.bottomRight,
             child: Column(
@@ -58,7 +83,7 @@ class SplashScreen extends StatelessWidget {
                   child: SizedBox(
                     width: 100,
                     child: Text(
-                      "Click To Find Out How You Can Help!",
+                      "In collaboration with",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.pressStart2p(
                         textStyle: const TextStyle(
@@ -73,6 +98,7 @@ class SplashScreen extends StatelessWidget {
                   height: 100,
                   width: 100,
                   child: FloatingActionButton(
+                    elevation: 0,
                     backgroundColor: Colors.transparent,
                     onPressed: () {
                       // Your onPressed code here

@@ -74,6 +74,7 @@ class GachaPage extends StatelessWidget {
                   height: 100,
                   width: 100,
                   child: FloatingActionButton(
+                    elevation: 0,
                     backgroundColor: Colors.transparent,
                     onPressed: () {
                       // Your onPressed code here
