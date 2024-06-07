@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:turtogatchi/inventory/components/turtle_information.dart';
 
 class TurtleCard extends StatefulWidget {
   final bool info;
 
-  const TurtleCard(this.info, {super.key});
+  const TurtleCard({super.key, required this.info});
 
   @override
-  State<TurtleCard> createState() => _TurtleCardState(info);
+  State<TurtleCard> createState() => _TurtleCardState();
 }
 
 class _TurtleCardState extends State<TurtleCard> {
-  bool hasInformation = false;
-
-  _TurtleCardState(info) {
-    hasInformation = info;
-  }
+  bool get info => widget.info;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 100,
-      height: 100,
+    return InkWell(
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TurtleInformationPage(),
+          ),
+        ),
+      },
       child: Card.outlined(
         elevation: 4,
         color: const Color.fromRGBO(152, 228, 255, 1.0),
@@ -31,20 +34,28 @@ class _TurtleCardState extends State<TurtleCard> {
             width: 2,
           ),
         ),
-        child: hasInformation
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // TODO LOGO GOES HERE
-                  Image.asset("assets/images/miniheart.png"),
-                  // TODO NAME GOES HERE
-                  const Text("Heart"),
-                ],
+        child: info
+            ? SizedBox(
+                width: 100,
+                height: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // TODO LOGO GOES HERE
+                    Image.asset("assets/images/miniheart.png"),
+                    // TODO NAME GOES HERE
+                    const Text("Heart"),
+                  ],
+                ),
               )
-            : const Center(
-                child: Icon(
-                  Icons.question_mark_sharp,
-                  color: Color.fromRGBO(78, 152, 180, 1.0),
+            : const SizedBox(
+                width: 100,
+                height: 100,
+                child: Center(
+                  child: Icon(
+                    Icons.question_mark_sharp,
+                    color: Color.fromRGBO(78, 152, 180, 1.0),
+                  ),
                 ),
               ),
       ),
