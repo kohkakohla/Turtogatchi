@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class GachaPage extends StatelessWidget {
   const GachaPage({super.key});
@@ -45,8 +46,8 @@ class GachaPage extends StatelessWidget {
             ],
           ),
           body: Center(
-            child: Image.asset("assets/images/gacha.png"),
-            // child: Lottie.asset("assets/test.json"),
+            // child: Image.asset("assets/images/gacha.png"),
+            child: Lottie.asset("assets/test.json"),
           ),
           floatingActionButton: Align(
             alignment: Alignment.bottomRight,
