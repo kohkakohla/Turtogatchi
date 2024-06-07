@@ -38,17 +38,24 @@ class HomePage extends StatelessWidget {
               IconButton(
                 icon: Image.asset("assets/images/inventory_icon.png"),
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => InventoryPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => InventoryPage()),
+                  );
                 },
               ),
 
               // Settings button
               IconButton(
                 icon: Image.asset("assets/images/settings_icon.png"),
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const SettingsPopup();
+                    },
+                  );
+                },
               )
             ],
           ),
@@ -252,7 +259,12 @@ class HomePage extends StatelessWidget {
                     elevation: 0,
                     backgroundColor: Colors.transparent,
                     onPressed: () {
-                      // Your onPressed code here
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const MuseumPopup();
+                        },
+                      );
                     },
                     child: Image.asset(
                       "assets/images/gachapage/Collaboration.png",
@@ -268,77 +280,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-// return Scaffold(
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: <Widget>[
-//                 ElevatedButton(
-//                   onPressed: () {
-//                     showDialog(
-//                       context: context,
-//                       builder: (context) {
-//                         return const MuseumPopup();
-//                       },
-//                     );
-//                   },
-//                   child: const Text("Museum"),
-//                 ),
-//                 ElevatedButton(
-//                   onPressed: () {
-//                     showDialog(
-//                       context: context,
-//                       builder: (context) {
-//                         return const SettingsPopup();
-//                       },
-//                     );
-//                   },
-//                   child: const Text("Settings"),
-//                 ),
-//                 ElevatedButton(
-//                   onPressed: () {
-//                     showDialog(
-//                       context: context,
-//                       builder: (context) {
-//                         return const EarnPopup();
-//                       },
-//                     );
-//                   },
-//                   child: const Text("Earn"),
-//                 ),
-//               ],
-//             ),
-
-//             // invnetory
-//             ElevatedButton(
-//               onPressed: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) => const InventoryPage(),
-//                   ),
-//                 );
-//               },
-//               child: const Text("Inventory"),
-//             ),
-
-//             // gacha
-//             ElevatedButton(
-//               onPressed: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) => const GachaPage(),
-//                   ),
-//                 );
-//               },
-//               child: const Text("Gacha"),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
