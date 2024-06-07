@@ -20,7 +20,7 @@ class _TurtleCardState extends State<TurtleCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TurtleInformationPage(),
+            builder: (context) => const TurtleInformationPage(),
           ),
         ),
       },
