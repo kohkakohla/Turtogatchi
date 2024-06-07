@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:turtogatchi/popups/earn_coins.dart';
+import 'package:turtogatchi/popups/earn_coin_popup.dart';
+import 'package:turtogatchi/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/popups/settings_popup.dart';
 
@@ -10,41 +11,59 @@ class TestPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return MuseumPopup();
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const MuseumPopup();
+                      },
+                    );
                   },
-                );
-              },
-              child: Text("Museum"),
+                  child: const Text("Museum"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const SettingsPopup();
+                      },
+                    );
+                  },
+                  child: const Text("Settings"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const EarnPopup();
+                      },
+                    );
+                  },
+                  child: const Text("Earn"),
+                ),
+              ],
             ),
+
+            // invnetory
             ElevatedButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return SettingsPopup();
-                  },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const InventoryPage(),
+                  ),
                 );
               },
-              child: Text("Settings"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return EarnPopup();
-                  },
-                );
-              },
-              child: Text("Earn"),
+              child: const Text("Inventory"),
             ),
           ],
         ),
