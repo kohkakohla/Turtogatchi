@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:turtogatchi/inventory/inventory_page.dart';
 
 class GachaPage extends StatelessWidget {
   const GachaPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // TODO MAKE THE GACHAFUNCTIONAL
     return Stack(
       children: <Widget>[
         Container(
@@ -31,10 +33,10 @@ class GachaPage extends StatelessWidget {
               IconButton(
                 icon: Image.asset("assets/images/inventory_icon.png"),
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => InventoryPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => InventoryPage()),
+                  );
                 },
               ),
 
@@ -45,10 +47,14 @@ class GachaPage extends StatelessWidget {
               )
             ],
           ),
+
+          // ANIMATION
           body: Center(
             // child: Image.asset("assets/images/gacha.png"),
             child: Lottie.asset("assets/test.json"),
           ),
+
+          // CHARITY BUTTON AT BOTTOM RIGHT
           floatingActionButton: Align(
             alignment: Alignment.bottomRight,
             child: Column(

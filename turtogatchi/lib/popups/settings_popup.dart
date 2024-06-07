@@ -14,6 +14,7 @@ class _SettingsPopupState extends State<SettingsPopup> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO MAKE THIS PAGE FUNCTIONAL
     return AlertDialog(
       // BORDER
       shape: RoundedRectangleBorder(
@@ -46,7 +47,7 @@ class _SettingsPopupState extends State<SettingsPopup> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // VOLUME CONTROL
+          // VOLUME CONTROL TODO MAKE VOLUME FUNCTIONAL
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -71,6 +72,7 @@ class _SettingsPopupState extends State<SettingsPopup> {
           ),
 
           // MUSIC CONTROL
+          // TODO MAKE MUSIC FUNCTIONAL
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -98,6 +100,8 @@ class _SettingsPopupState extends State<SettingsPopup> {
           ),
 
           // NOTIFICATIONS SWITCH
+          // TODO MAKE NOTIFICATIONS FUNCTIONAL?
+          // TODO WHAT NOTIFICATIONS?
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

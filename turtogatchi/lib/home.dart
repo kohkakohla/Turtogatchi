@@ -10,6 +10,7 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
+  // TODO ADD BACKGROUD MUSIC HERE
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
@@ -82,7 +83,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              // TURTLE TODO GET FROM DB?
+              // TURTLE TODO GET FROM DB THE TURTLE.
               Expanded(
                 child: Align(
                   alignment: Alignment.center,

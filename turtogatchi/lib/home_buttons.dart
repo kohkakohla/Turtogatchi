@@ -27,6 +27,7 @@ class HomeButtons extends StatelessWidget {
             child: Column(
               children: [
                 // FEED BUTTON
+                // TODO MAKE THIS FUNCTIONAL!!!
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
@@ -34,7 +35,9 @@ class HomeButtons extends StatelessWidget {
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+// TODO HEREHEREHEREHEHEHERHERHE
+                    },
                     child: Column(
                       children: [
                         Image.asset(

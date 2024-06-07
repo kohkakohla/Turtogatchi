@@ -52,6 +52,7 @@ class InventoryPage extends StatelessWidget {
                         spacing: 20,
                         runSpacing: 15,
                         children: [
+                          // TODO MAKE FROM DB.
                           for (var i = 0; i < 5; i++) cardGenerator(true),
                           for (var i = 0; i < 15; i++) cardGenerator(false),
                         ],

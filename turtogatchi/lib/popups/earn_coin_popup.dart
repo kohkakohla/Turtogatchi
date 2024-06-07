@@ -6,6 +6,7 @@ class EarnPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO MAKE THIS FUNCTIONAL BUT I THINK QUITE HARD
     return AlertDialog(
       // BORDER OF DIALOG
       shape: RoundedRectangleBorder(

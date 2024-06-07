@@ -6,6 +6,7 @@ class MuseumPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO IMRPOVE THE STYLING, I THINK QUITE UGLY
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20), // radius of the outline

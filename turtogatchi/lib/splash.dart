@@ -6,6 +6,8 @@ class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
+
+  //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
