@@ -4,8 +4,10 @@ import 'package:turtogatchi/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/popups/settings_popup.dart';
 
-class TestPage extends StatelessWidget {
-  const TestPage({super.key});
+import 'gacha/gacha_page.dart';
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,19 @@ class TestPage extends StatelessWidget {
                 );
               },
               child: const Text("Inventory"),
+            ),
+
+            // gacha
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GachaPage(),
+                  ),
+                );
+              },
+              child: const Text("Gacha"),
             ),
           ],
         ),
