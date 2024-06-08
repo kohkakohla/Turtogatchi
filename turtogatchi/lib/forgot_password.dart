@@ -14,7 +14,25 @@ class ForgotPasswordPage extends StatelessWidget {
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
-    //Sign in function here
+    //firebase reset password function
+    Future<void> resetPassword(String email) async {
+      try {
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: _emailController.text.trim());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Password reset email sent!'),
+          ),
+        );
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error sending password reset email'),
+          ),
+        );
+      }
+    }
 
     return Stack(
       children: <Widget>[
@@ -32,7 +50,7 @@ class ForgotPasswordPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 36, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 72, 0, 0),
                   child:
 
                       // Login box container
@@ -50,15 +68,26 @@ class ForgotPasswordPage extends StatelessWidget {
                           child: Column(
                             children: [
                               // Big welcome text
-                              const Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text('Forgot Password!?',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: "MarioRegular",
-                                        fontSize: 24,
-                                      ))),
-
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    //back button
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    const Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(40, 10, 55, 10),
+                                        child: Text('Forgot \nPassword!?',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: "MarioRegular",
+                                              fontSize: 24,
+                                            )))
+                                  ]),
                               // Subtext for login page
                               Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
@@ -72,11 +101,24 @@ class ForgotPasswordPage extends StatelessWidget {
                                       fontSize: 8,
                                     )),
                                   )),
+                              // Description text for forgot password reset
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                                  child: Text(
+                                    "Enter your email address and we'll send you a link to reset your password so you can get back on track turtogotching with us!",
+                                    textAlign: TextAlign.left,
+                                    style: GoogleFonts.pressStart2p(
+                                        textStyle: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 8,
+                                    )),
+                                  )),
 
                               // Email text field
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
-                                    10, 8, 10, 8),
+                                    10, 8, 10, 28),
                                 child: TextFormField(
                                   controller: _emailController,
                                   keyboardType: TextInputType.emailAddress,
@@ -91,21 +133,6 @@ class ForgotPasswordPage extends StatelessWidget {
                                 ),
                               ),
 
-                              // Password text field
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    10, 8, 10, 8),
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Password',
-                                      labelStyle: GoogleFonts.pressStart2p(
-                                          textStyle: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 8,
-                                      ))),
-                                ),
-                              ),
                               // Login button
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -116,9 +143,17 @@ class ForgotPasswordPage extends StatelessWidget {
                                   ),
                                   minimumSize: Size(328, 50),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  _emailController.text.isNotEmpty
+                                      ? resetPassword(_emailController.text)
+                                      : ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                          content:
+                                              Text('Please enter an email'),
+                                        ));
+                                },
                                 child: Text(
-                                  'Sign In',
+                                  'Reset Password',
                                   style: GoogleFonts.pressStart2p(
                                     textStyle: const TextStyle(
                                       color: Colors.white,
@@ -127,151 +162,6 @@ class ForgotPasswordPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
-                              // or sign in with text
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0, 12, 0, 12),
-                                child: Text(
-                                  "Or sign in with",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.pressStart2p(
-                                      textStyle: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 8,
-                                  )),
-                                ),
-                              ),
-
-                              // Google sign in button
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  minimumSize: Size(328, 50),
-                                ),
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePage()));
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      "assets/images/google.png",
-                                      height: 20,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              10, 0, 0, 0),
-                                      child: Text(
-                                        'Continue with Google',
-                                        style: GoogleFonts.pressStart2p(
-                                          textStyle: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .start, // Adjusts the space between Rows
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(36, 0, 0, 0),
-                                        child: Text(
-                                          "Don't have an account?",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.pressStart2p(
-                                            textStyle: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0, 0, 0, 0),
-                                        child: TextButton(
-                                          onPressed: () {
-                                            //route to sign up page
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SignUpPage()));
-                                          },
-                                          child: Text(
-                                            'Sign Up Here',
-                                            style: GoogleFonts.pressStart2p(
-                                              textStyle: const TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 8,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  // Row for forget password
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(36, 0, 0, 0),
-                                        child: Text(
-                                          "Forgot your password?",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.pressStart2p(
-                                            textStyle: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0, 0, 0, 0),
-                                        child: TextButton(
-                                          onPressed: () {
-                                            // Your onPressed code here
-                                          },
-                                          child: Text(
-                                            'Reset It Here',
-                                            style: GoogleFonts.pressStart2p(
-                                              textStyle: const TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 8,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
                             ],
                           ),
                         ),

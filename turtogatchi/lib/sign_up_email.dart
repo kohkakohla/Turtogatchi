@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
+import 'home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -48,7 +49,7 @@ class SignUpPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 84, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 36, 0, 0),
                   child:
 
                       // Login box container
@@ -101,49 +102,78 @@ class SignUpPage extends StatelessWidget {
                                     )),
                                   )),
 
-                              // Login with email button
+                              // Email text field
                               Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.black,
-                                      backgroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      minimumSize: const Size(328, 50),
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    10, 8, 10, 8),
+                                child: TextFormField(
+                                  controller: _emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Email',
+                                      labelStyle: GoogleFonts.pressStart2p(
+                                          textStyle: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 8,
+                                      ))),
+                                ),
+                              ),
+
+                              // Password text field
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    10, 8, 10, 8),
+                                child: TextFormField(
+                                  controller: _passwordController,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Password',
+                                      labelStyle: GoogleFonts.pressStart2p(
+                                          textStyle: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 8,
+                                      ))),
+                                ),
+                              ),
+                              // Login button
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.blue,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  minimumSize: Size(328, 50),
+                                ),
+                                onPressed: () {
+                                  _signUn();
+                                },
+                                child: Text(
+                                  'Sign Up',
+                                  style: GoogleFonts.pressStart2p(
+                                    textStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
                                     ),
-                                    onPressed: () {},
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/email.png",
-                                          height: 20,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(
-                                            10,
-                                            0,
-                                            0,
-                                            0,
-                                          ),
-                                          child: Text(
-                                            'Sign up with Email',
-                                            style: GoogleFonts.pressStart2p(
-                                              textStyle: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              // or sign in with text
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0, 12, 0, 12),
+                                child: Text(
+                                  "Or sign in with",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.pressStart2p(
+                                      textStyle: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 8,
                                   )),
+                                ),
+                              ),
 
                               // Google sign in button
                               ElevatedButton(
@@ -153,7 +183,7 @@ class SignUpPage extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  minimumSize: const Size(328, 50),
+                                  minimumSize: Size(328, 50),
                                 ),
                                 onPressed: () {
                                   Navigator.pushReplacement(
@@ -174,7 +204,7 @@ class SignUpPage extends StatelessWidget {
                                           const EdgeInsetsDirectional.fromSTEB(
                                               10, 0, 0, 0),
                                       child: Text(
-                                        'Sign up with Google',
+                                        'Continue with Google',
                                         style: GoogleFonts.pressStart2p(
                                           textStyle: const TextStyle(
                                             color: Colors.black,

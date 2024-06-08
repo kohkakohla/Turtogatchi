@@ -315,11 +315,8 @@ class LoginPage extends StatelessWidget {
                                         child: TextButton(
                                           onPressed: () {
                                             //route to reset password page
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ForgotPasswordPage()));
+                                            Navigator.pushNamed(
+                                                context, '/forgot_password');
                                           },
                                           child: Text(
                                             'Reset It Here',
