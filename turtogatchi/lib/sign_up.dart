@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turtogatchi/forgot_password.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'home.dart';
-import 'sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class SignUpPage extends StatelessWidget {
+  SignUpPage({super.key});
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -18,65 +15,21 @@ class LoginPage extends StatelessWidget {
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
     //Sign in function here
-    Future<void> _signIn() async {
-      //firebase sign in function
+    Future<void> _signUn() async {
+      // firebase sign up code
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-        // Sign in successful, navigate to home page
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
         Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
       } catch (e) {
-        // Sign in failed, show error message
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Sign In Error'),
-            content: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    }
-
-    //firebase sign in with google function
-    Future<void> _signInWithGoogle() async {
-      try {
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        final GoogleSignInAuthentication? googleAuth =
-            googleUser?.authentication as GoogleSignInAuthentication?;
-        final OAuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        await FirebaseAuth.instance.signInWithCredential(credential);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Sign In Error'),
-            content: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
+        print(e);
       }
     }
 
@@ -116,7 +69,7 @@ class LoginPage extends StatelessWidget {
                               // Big welcome text
                               const Padding(
                                   padding: EdgeInsets.all(10),
-                                  child: Text('Welcome',
+                                  child: Text('Get Started!',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: "MarioRegular",
@@ -128,7 +81,7 @@ class LoginPage extends StatelessWidget {
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       0, 12, 0, 12),
                                   child: Text(
-                                    "Let's get to turtogatching!",
+                                    "Join the family today!",
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.pressStart2p(
                                         textStyle: const TextStyle(
@@ -182,10 +135,10 @@ class LoginPage extends StatelessWidget {
                                   minimumSize: Size(328, 50),
                                 ),
                                 onPressed: () {
-                                  _signIn();
+                                  _signUn();
                                 },
                                 child: Text(
-                                  'Sign In',
+                                  'Sign Up',
                                   style: GoogleFonts.pressStart2p(
                                     textStyle: const TextStyle(
                                       color: Colors.white,
@@ -221,7 +174,11 @@ class LoginPage extends StatelessWidget {
                                   minimumSize: Size(328, 50),
                                 ),
                                 onPressed: () {
-                                  _signInWithGoogle();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomePage()));
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -275,12 +232,7 @@ class LoginPage extends StatelessWidget {
                                             .fromSTEB(0, 0, 0, 0),
                                         child: TextButton(
                                           onPressed: () {
-                                            //route to sign up page
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SignUpPage()));
+                                            // Your onPressed code here
                                           },
                                           child: Text(
                                             'Sign Up Here',
@@ -318,12 +270,7 @@ class LoginPage extends StatelessWidget {
                                             .fromSTEB(0, 0, 0, 0),
                                         child: TextButton(
                                           onPressed: () {
-                                            //route to reset password page
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ForgotPasswordPage()));
+                                            // Your onPressed code here
                                           },
                                           child: Text(
                                             'Reset It Here',

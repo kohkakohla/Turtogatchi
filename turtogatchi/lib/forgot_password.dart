@@ -1,84 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turtogatchi/forgot_password.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'home.dart';
 import 'sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class ForgotPasswordPage extends StatelessWidget {
+  ForgotPasswordPage({super.key});
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   @override
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
     //Sign in function here
-    Future<void> _signIn() async {
-      //firebase sign in function
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-        // Sign in successful, navigate to home page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } catch (e) {
-        // Sign in failed, show error message
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Sign In Error'),
-            content: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    }
-
-    //firebase sign in with google function
-    Future<void> _signInWithGoogle() async {
-      try {
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        final GoogleSignInAuthentication? googleAuth =
-            googleUser?.authentication as GoogleSignInAuthentication?;
-        final OAuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        await FirebaseAuth.instance.signInWithCredential(credential);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Sign In Error'),
-            content: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    }
 
     return Stack(
       children: <Widget>[
@@ -116,7 +52,7 @@ class LoginPage extends StatelessWidget {
                               // Big welcome text
                               const Padding(
                                   padding: EdgeInsets.all(10),
-                                  child: Text('Welcome',
+                                  child: Text('Forgot Password!?',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: "MarioRegular",
@@ -128,7 +64,7 @@ class LoginPage extends StatelessWidget {
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       0, 12, 0, 12),
                                   child: Text(
-                                    "Let's get to turtogatching!",
+                                    "Let's get back to turtogotching!",
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.pressStart2p(
                                         textStyle: const TextStyle(
@@ -160,7 +96,6 @@ class LoginPage extends StatelessWidget {
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     10, 8, 10, 8),
                                 child: TextFormField(
-                                  controller: _passwordController,
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Password',
@@ -181,9 +116,7 @@ class LoginPage extends StatelessWidget {
                                   ),
                                   minimumSize: Size(328, 50),
                                 ),
-                                onPressed: () {
-                                  _signIn();
-                                },
+                                onPressed: () {},
                                 child: Text(
                                   'Sign In',
                                   style: GoogleFonts.pressStart2p(
@@ -221,7 +154,11 @@ class LoginPage extends StatelessWidget {
                                   minimumSize: Size(328, 50),
                                 ),
                                 onPressed: () {
-                                  _signInWithGoogle();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomePage()));
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -318,12 +255,7 @@ class LoginPage extends StatelessWidget {
                                             .fromSTEB(0, 0, 0, 0),
                                         child: TextButton(
                                           onPressed: () {
-                                            //route to reset password page
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ForgotPasswordPage()));
+                                            // Your onPressed code here
                                           },
                                           child: Text(
                                             'Reset It Here',
