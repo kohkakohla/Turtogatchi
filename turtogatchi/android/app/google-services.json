@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "261300078740",
+    "project_id": "turtogachi",
+    "storage_bucket": "turtogachi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261300078740:android:fa0558eb64d289d8070c81",
+        "android_client_info": {
+          "package_name": "com.example.turtogatchi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "261300078740-meidgh18nm2s4lfgd7gmlialct7uae63.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIOHL3sywU3ZDMWUakMngeDEOdvoe97nA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "261300078740-meidgh18nm2s4lfgd7gmlialct7uae63.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
