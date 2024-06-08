@@ -275,12 +275,8 @@ class LoginPage extends StatelessWidget {
                                             .fromSTEB(0, 0, 0, 0),
                                         child: TextButton(
                                           onPressed: () {
-                                            //route to sign up page
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SignUpPage()));
+                                            Navigator.pushNamed(
+                                                context, '/sign_up');
                                           },
                                           child: Text(
                                             'Sign Up Here',

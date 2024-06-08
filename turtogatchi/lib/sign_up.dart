@@ -67,14 +67,26 @@ class SignUpPage extends StatelessWidget {
                           child: Column(
                             children: [
                               // Big welcome text
-                              const Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text('Get Started!',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: "MarioRegular",
-                                        fontSize: 24,
-                                      ))),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    //back button
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    const Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(10, 10, 35, 10),
+                                        child: Text('Get Started!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: "MarioRegular",
+                                              fontSize: 24,
+                                            )))
+                                  ]),
 
                               // Subtext for login page
                               Padding(

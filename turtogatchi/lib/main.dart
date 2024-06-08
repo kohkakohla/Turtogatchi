@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:turtogatchi/firebase_options.dart';
+import 'package:turtogatchi/forgot_password.dart';
 import 'package:turtogatchi/home.dart';
+import 'package:turtogatchi/sign_up.dart';
 import 'package:turtogatchi/splash.dart';
 import 'package:turtogatchi/login.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ void main() async {
   // Sign out the user when launching for TESTing purposes
   await FirebaseAuth.instance.signOut();
   runApp(const MyApp());
+  print('');
 }
 
 class MyApp extends StatelessWidget {
@@ -37,6 +40,8 @@ class MyApp extends StatelessWidget {
           '/splash': (context) => const SplashScreen(),
           '/login': (context) => LoginPage(),
           '/home': (context) => const HomePage(),
+          '/sign_up': (context) => SignUpPage(),
+          '/forgot_password': (context) => ForgotPasswordPage(),
         });
   }
 }
