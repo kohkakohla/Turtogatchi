@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turtogatchi/home.dart';
 import 'dart:async';
-import 'home.dart';
-import 'sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPasswordPage extends StatelessWidget {

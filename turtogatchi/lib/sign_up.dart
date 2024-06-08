@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +27,31 @@ class SignUpPage extends StatelessWidget {
           print('The password provided is too weak.');
         } else if (e.code == 'email-already-in-use') {
           print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+
+    //Firebase sign up with google function
+    Future<void> _signUpWithGoogle() async {
+      // firebase sign up with google mobile app code
+      try {
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+        final GoogleSignInAuthentication? googleAuth =
+            await googleUser?.authentication;
+        final OAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+        await FirebaseAuth.instance.signInWithCredential(credential);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          print('The account already exists with a different credential.');
+        } else if (e.code == 'invalid-credential') {
+          print('Error occurred while accessing credentials. Try again.');
         }
       } catch (e) {
         print(e);
@@ -156,17 +182,13 @@ class SignUpPage extends StatelessWidget {
                                   minimumSize: const Size(328, 50),
                                 ),
                                 onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePage()));
+                                  _signUpWithGoogle();
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Image.asset(
-                                      "assets/images/google.png",
+                                      "assets/images/google8bit.png",
                                       height: 20,
                                     ),
                                     Padding(

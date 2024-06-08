@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turtogatchi/forgot_password.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
-import 'home.dart';
-import 'sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -227,7 +224,7 @@ class LoginPage extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Image.asset(
-                                      "assets/images/google.png",
+                                      "assets/images/google8bit.png",
                                       height: 20,
                                     ),
                                     Padding(
