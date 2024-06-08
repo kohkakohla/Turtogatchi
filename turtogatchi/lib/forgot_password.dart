@@ -42,6 +42,7 @@ class ForgotPasswordPage extends StatelessWidget {
           ),
         ),
         Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           body: SafeArea(
             child: Column(

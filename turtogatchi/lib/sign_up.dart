@@ -14,25 +14,6 @@ class SignUpPage extends StatelessWidget {
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
-    //Sign in function here
-    Future<void> _signUn() async {
-      // firebase sign up code
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          print('The password provided is too weak.');
-        } else if (e.code == 'email-already-in-use') {
-          print('The account already exists for that email.');
-        }
-      } catch (e) {
-        print(e);
-      }
-    }
-
     //Firebase sign up with google function
     Future<void> _signUpWithGoogle() async {
       // firebase sign up with google mobile app code
@@ -74,7 +55,7 @@ class SignUpPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 84, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 108, 0, 0),
                   child:
 
                       // Login box container
@@ -140,7 +121,10 @@ class SignUpPage extends StatelessWidget {
                                       ),
                                       minimumSize: const Size(328, 50),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, '/sign_up_email');
+                                    },
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -171,7 +155,7 @@ class SignUpPage extends StatelessWidget {
                                     ),
                                   )),
 
-                              // Google sign in button
+                              // Google sign up button
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.black,
@@ -208,89 +192,6 @@ class SignUpPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .start, // Adjusts the space between Rows
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(36, 0, 0, 0),
-                                        child: Text(
-                                          "Don't have an account?",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.pressStart2p(
-                                            textStyle: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0, 0, 0, 0),
-                                        child: TextButton(
-                                          onPressed: () {
-                                            // Your onPressed code here
-                                          },
-                                          child: Text(
-                                            'Sign Up Here',
-                                            style: GoogleFonts.pressStart2p(
-                                              textStyle: const TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 8,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  // Row for forget password
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(36, 0, 0, 0),
-                                        child: Text(
-                                          "Forgot your password?",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.pressStart2p(
-                                            textStyle: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0, 0, 0, 0),
-                                        child: TextButton(
-                                          onPressed: () {
-                                            // Your onPressed code here
-                                          },
-                                          child: Text(
-                                            'Reset It Here',
-                                            style: GoogleFonts.pressStart2p(
-                                              textStyle: const TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 8,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
                             ],
                           ),
                         ),

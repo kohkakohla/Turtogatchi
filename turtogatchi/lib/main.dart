@@ -3,6 +3,7 @@ import 'package:turtogatchi/firebase_options.dart';
 import 'package:turtogatchi/forgot_password.dart';
 import 'package:turtogatchi/home.dart';
 import 'package:turtogatchi/sign_up.dart';
+import 'package:turtogatchi/sign_up_email.dart';
 import 'package:turtogatchi/splash.dart';
 import 'package:turtogatchi/login.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginPage(),
           '/home': (context) => const HomePage(),
           '/sign_up': (context) => SignUpPage(),
+          '/sign_up_email': (context) => SignUpEmailPage(),
           '/forgot_password': (context) => ForgotPasswordPage(),
         });
   }

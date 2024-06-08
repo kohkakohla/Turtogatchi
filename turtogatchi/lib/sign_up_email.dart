@@ -1,20 +1,29 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class SignUpPage extends StatelessWidget {
-  SignUpPage({super.key});
+class SignUpEmailPage extends StatefulWidget {
+  SignUpEmailPage({super.key});
+
+  @override
+  SignUpEmailPageState createState() => SignUpEmailPageState();
+}
+
+class SignUpEmailPageState extends State<SignUpEmailPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isObscured = true;
 
   @override
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
     //Sign in function here
-    Future<void> _signUn() async {
+    Future<void> _signUp() async {
       // firebase sign up code
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -22,13 +31,26 @@ class SignUpPage extends StatelessWidget {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const HomePage()));
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          print('The password provided is too weak.');
-        } else if (e.code == 'email-already-in-use') {
-          print('The account already exists for that email.');
+        var errormsg = e.code;
+        if (errormsg == 'weak-password') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('The password provided is too weak.'),
+            ),
+          );
+        } else if (errormsg == 'email-already-in-use') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('The account already exists for that email.'),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error creating account: $errormsg'),
+            ),
+          );
         }
-      } catch (e) {
-        print(e);
       }
     }
 
@@ -43,12 +65,13 @@ class SignUpPage extends StatelessWidget {
           ),
         ),
         Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           body: SafeArea(
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 36, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 72, 0, 0),
                   child:
 
                       // Login box container
@@ -70,16 +93,18 @@ class SignUpPage extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     //back button
-                                    IconButton(
-                                      icon: Icon(Icons.arrow_back),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                      child: IconButton(
+                                          icon: Icon(Icons.arrow_back),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          }),
                                     ),
                                     const Padding(
                                         padding:
-                                            EdgeInsets.fromLTRB(10, 10, 35, 10),
-                                        child: Text('Get Started!',
+                                            EdgeInsets.fromLTRB(0, 10, 45, 10),
+                                        child: Text('Email is the \nway to go!',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: "MarioRegular",
@@ -125,16 +150,39 @@ class SignUpPage extends StatelessWidget {
                                     10, 8, 10, 8),
                                 child: TextFormField(
                                   controller: _passwordController,
+                                  obscureText:
+                                      _isObscured, // Use the _isObscured flag to toggle text visibility
                                   decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Password',
-                                      labelStyle: GoogleFonts.pressStart2p(
-                                          textStyle: const TextStyle(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Password',
+                                    labelStyle: GoogleFonts.pressStart2p(
+                                      textStyle: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 8,
-                                      ))),
+                                      ),
+                                    ),
+                                    // Add a visibility toggle icon
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        // Change the icon based on the state of _isObscured
+                                        _isObscured
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: Colors.grey,
+                                      ),
+                                      onPressed: () {
+                                        print(
+                                            'Visibility button pressed'); // Debug print statement
+                                        // Update the state to toggle text visibility
+                                        setState(() {
+                                          _isObscured = !_isObscured;
+                                        });
+                                      },
+                                    ),
+                                  ),
                                 ),
                               ),
+
                               // Login button
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -146,7 +194,7 @@ class SignUpPage extends StatelessWidget {
                                   minimumSize: Size(328, 50),
                                 ),
                                 onPressed: () {
-                                  _signUn();
+                                  _signUp();
                                 },
                                 child: Text(
                                   'Sign Up',
@@ -158,146 +206,6 @@ class SignUpPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
-                              // or sign in with text
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0, 12, 0, 12),
-                                child: Text(
-                                  "Or sign in with",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.pressStart2p(
-                                      textStyle: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 8,
-                                  )),
-                                ),
-                              ),
-
-                              // Google sign in button
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  minimumSize: Size(328, 50),
-                                ),
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePage()));
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      "assets/images/google.png",
-                                      height: 20,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              10, 0, 0, 0),
-                                      child: Text(
-                                        'Continue with Google',
-                                        style: GoogleFonts.pressStart2p(
-                                          textStyle: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .start, // Adjusts the space between Rows
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(36, 0, 0, 0),
-                                        child: Text(
-                                          "Don't have an account?",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.pressStart2p(
-                                            textStyle: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0, 0, 0, 0),
-                                        child: TextButton(
-                                          onPressed: () {
-                                            // Your onPressed code here
-                                          },
-                                          child: Text(
-                                            'Sign Up Here',
-                                            style: GoogleFonts.pressStart2p(
-                                              textStyle: const TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 8,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  // Row for forget password
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(36, 0, 0, 0),
-                                        child: Text(
-                                          "Forgot your password?",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.pressStart2p(
-                                            textStyle: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0, 0, 0, 0),
-                                        child: TextButton(
-                                          onPressed: () {
-                                            // Your onPressed code here
-                                          },
-                                          child: Text(
-                                            'Reset It Here',
-                                            style: GoogleFonts.pressStart2p(
-                                              textStyle: const TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 8,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
                             ],
                           ),
                         ),
