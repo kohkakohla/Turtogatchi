@@ -12,15 +12,24 @@ import 'package:turtogatchi/splash.dart';
 import 'package:turtogatchi/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 
 void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure Flutter bindings are initialized
+  
+  // initialize firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Google Mobile Ads
+  await MobileAds.instance.initialize();
+
   // Sign out the user when launching for TESTing purposes
   await FirebaseAuth.instance.signOut();
+  
   runApp(const MyApp());
   print('');
 }
