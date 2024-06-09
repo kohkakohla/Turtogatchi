@@ -13,6 +13,8 @@ class GachaPage extends StatefulWidget {
 
 class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   bool _showButton = true;
+  bool _isAnimationActive = false;
+
   late AnimationController _controller;
   AudioPlayer player = AudioPlayer();
   @override
@@ -30,6 +32,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _controller.removeListener(() {});
     player.dispose();
     super.dispose();
   }
@@ -44,25 +47,43 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     // update coins in firestore
     setState(() {
       _showButton = false;
+      _isAnimationActive = true;
     });
     _initAudioPlayer();
     print("Spinning the gacha!");
   }
 
   void _initAudioPlayer() async {
-    print("Loading drum audio asset");
+    print("Loading drum audio assets");
+    await player.setAsset("assets/audio/drums.mp3");
     if (player.playing) {
       print("Player is already playing");
       await player.pause();
       print("paused!");
     } else {
       print("Player is not playing");
-      player.setAsset("assets/audio/drum.mp3");
+
       await player.play();
     }
     // await player.pause();
     // await player.stop();
     // Cancel the subscription after getting the current state to avoid memory leaks
+  }
+
+  void _resetState() {
+    print("reset");
+    print(_controller.status);
+
+    if (_controller.status == AnimationStatus.completed) {
+      print("reset3");
+      setState(() {
+        _isAnimationActive = false;
+        _showButton = true;
+      });
+      print("reset2");
+      _controller.reset();
+      player.dispose();
+    }
   }
 
   @override
@@ -167,16 +188,21 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                   ]),
 
                 if (!_showButton) // Show the Lottie animation when the button is not visible
-                  Lottie.asset(
-                    "assets/test.json",
-                    controller: _controller,
-                    onLoaded: (composition) {
-                      // Set the controller bounds to the duration of the Lottie file
-                      _controller
-                        ..duration = composition.duration
-                        ..forward(); // Play the animation a single time
-                    },
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        print("activated");
+                        _resetState();
+                      },
+                      child: Lottie.asset(
+                        "assets/test.json",
+                        controller: _controller,
+                        onLoaded: (composition) {
+                          // Set the controller bounds to the duration of the Lottie file
+                          _controller
+                            ..duration = composition.duration
+                            ..forward(); // Play the animation a single time
+                        },
+                      )),
                 // The image is always displayed unless you want it to disappear too
               ],
             ),
