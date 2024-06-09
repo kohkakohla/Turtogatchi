@@ -11,17 +11,42 @@ class GachaPage extends StatefulWidget {
   GachaPageState createState() => GachaPageState();
 }
 
-class GachaPageState extends State<GachaPage> {
+class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
+  bool _showButton = true;
+  late AnimationController _controller;
   AudioPlayer player = AudioPlayer();
   @override
   void initState() {
     super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 4));
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Animation has completed its single run
+        // Perform any action here, like navigating to another page or showing a message
+      }
+    });
   }
 
   @override
   void dispose() {
     player.dispose();
     super.dispose();
+  }
+
+  void _beginSpin() {
+    // check if user has enough coins
+    // if (Global.coins < 10) {
+    //   print("Not enough coins to spin!");
+    //   return;
+    // }
+
+    // update coins in firestore
+    setState(() {
+      _showButton = false;
+    });
+    _initAudioPlayer();
+    print("Spinning the gacha!");
   }
 
   void _initAudioPlayer() async {
@@ -43,7 +68,6 @@ class GachaPageState extends State<GachaPage> {
   @override
   Widget build(BuildContext context) {
     // TODO MAKE THE GACHAFUNCTIONAL
-    _initAudioPlayer();
 
     return Stack(
       children: <Widget>[
@@ -86,8 +110,76 @@ class GachaPageState extends State<GachaPage> {
 
           // ANIMATION
           body: Center(
-            // child: Image.asset("assets/images/gacha.png"),
-            child: Lottie.asset("assets/test.json"),
+            child: Stack(
+              alignment:
+                  Alignment.center, // Ensure the stack's children are centered
+              children: [
+                if (_showButton) // Show the button based on the _showButton flag
+                  //Image.asset( "assets/images/gacha.png"), // This is the bottom layer
+
+                  Stack(alignment: Alignment.center, children: [
+                    Image.asset("assets/images/gacha.png"),
+                    Opacity(
+                      opacity: 1,
+                      child: Padding(
+                          padding: EdgeInsets.fromLTRB(40, 0, 40, 100),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                side: const BorderSide(color: Colors.black),
+                              ),
+                              minimumSize: const Size(150, 70),
+                            ),
+                            onPressed: () {
+                              _beginSpin();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  "assets/images/home/coin.png",
+                                  height: 40,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                  ),
+                                  child: Text(
+                                    '10 Coins to spin!',
+                                    style: GoogleFonts.pressStart2p(
+                                      textStyle: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                    )
+                  ]),
+
+                if (!_showButton) // Show the Lottie animation when the button is not visible
+                  Lottie.asset(
+                    "assets/test.json",
+                    controller: _controller,
+                    onLoaded: (composition) {
+                      // Set the controller bounds to the duration of the Lottie file
+                      _controller
+                        ..duration = composition.duration
+                        ..forward(); // Play the animation a single time
+                    },
+                  ),
+                // The image is always displayed unless you want it to disappear too
+              ],
+            ),
           ),
 
           // CHARITY BUTTON AT BOTTOM RIGHT
