@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:turtogatchi/login.dart';
-import 'package:turtogatchi/popups/museum_popup.dart';
+// import 'package:turtogatchi/popups/museum_popup.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
