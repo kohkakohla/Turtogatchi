@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:turtogatchi/popups/museum_popup.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});
@@ -80,7 +81,7 @@ class SignUpPage extends StatelessWidget {
                                     IconButton(
                                       icon: Icon(Icons.arrow_back),
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.pop(context, true);
                                       },
                                     ),
                                     const Padding(
@@ -234,7 +235,12 @@ class SignUpPage extends StatelessWidget {
                     elevation: 0,
                     backgroundColor: Colors.transparent,
                     onPressed: () {
-                      // Your onPressed code here
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const MuseumPopup();
+                        },
+                      );
                     },
                     child: Image.asset(
                       "assets/images/gachapage/Collaboration.png",

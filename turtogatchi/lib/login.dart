@@ -4,6 +4,9 @@ import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:turtogatchi/popups/museum_popup.dart';
+import 'package:turtogatchi/sign_up.dart';
+import 'package:just_audio/just_audio.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -12,33 +15,69 @@ class LoginPage extends StatefulWidget {
   LoginPageState createState() => LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   bool _isObscured = true; // Flag to toggle text visibility
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
+  final AudioPlayer player = AudioPlayer();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _emailFocusNode.dispose();
+    _emailFocusNode.unfocus();
+    player.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+
+    print("Login page initialized");
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).unfocus();
     });
+    _initAudioPlayer();
+  }
+
+  void _initAudioPlayer() async {
+    player.setAsset('assets/audio/bgMusic.mp3').catchError((error) {
+      print("An error occurred: $error");
+    });
+    print("Playing background music");
+    player.setLoopMode(LoopMode.one);
+    player.play();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      player.pause(); // Pause audio when app is in background
+    } else if (state == AppLifecycleState.resumed) {
+      player.play(); // Resume audio when app comes to foreground
+    }
   }
 
   @override
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
+    void resetState() {
+      setState(() {
+        _emailController.clear();
+        _passwordController.clear();
+        _isObscured = true;
+      });
+
+      FocusScope.of(context).unfocus();
+    }
+
     //Sign in function here
     Future<void> _signIn() async {
       //firebase sign in function
@@ -101,6 +140,14 @@ class LoginPageState extends State<LoginPage> {
         );
       }
     }
+
+    final player = AudioPlayer();
+    player.setAsset('assets/audio/bgMusic.mp3').catchError((error) {
+      print("An error occurred: $error");
+    });
+    print("Playing background music");
+    player.setLoopMode(LoopMode.one);
+    player.play();
 
     return Stack(
       children: <Widget>[
@@ -309,7 +356,7 @@ class LoginPageState extends State<LoginPage> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsetsDirectional
-                                              .fromSTEB(36, 0, 0, 0),
+                                              .fromSTEB(26, 0, 0, 0),
                                           child: Text(
                                             "Don't have an account?",
                                             textAlign: TextAlign.center,
@@ -326,8 +373,12 @@ class LoginPageState extends State<LoginPage> {
                                               .fromSTEB(0, 0, 0, 0),
                                           child: TextButton(
                                             onPressed: () {
-                                              Navigator.pushNamed(
-                                                  context, '/sign_up');
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SignUpPage()),
+                                              ).then((value) => resetState());
                                             },
                                             child: Text(
                                               'Sign Up Here',
@@ -348,7 +399,7 @@ class LoginPageState extends State<LoginPage> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsetsDirectional
-                                              .fromSTEB(36, 0, 0, 0),
+                                              .fromSTEB(26, 0, 0, 0),
                                           child: Text(
                                             "Forgot your password?",
                                             textAlign: TextAlign.center,
@@ -426,6 +477,12 @@ class LoginPageState extends State<LoginPage> {
                       elevation: 0,
                       backgroundColor: Colors.transparent,
                       onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const MuseumPopup();
+                          },
+                        );
                         // Your onPressed code here
                       },
                       child: Image.asset(
