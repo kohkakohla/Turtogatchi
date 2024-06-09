@@ -13,6 +13,7 @@ dependencies:
   firebase_auth: ^5.0.0
   flutter:
     sdk: flutter
+  google_mobile_ads: ^1.0.1
   flutter_localizations:
     sdk: flutter
   font_awesome_flutter: ^10.7.0
