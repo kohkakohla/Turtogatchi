@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,7 +29,7 @@ class SignUpPage extends StatelessWidget {
         );
         await FirebaseAuth.instance.signInWithCredential(credential);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           print('The account already exists with a different credential.');

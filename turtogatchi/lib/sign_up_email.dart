@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,7 +29,7 @@ class SignUpEmailPageState extends State<SignUpEmailPage> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: _emailController.text, password: _passwordController.text);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       } on FirebaseAuthException catch (e) {
         var errormsg = e.code;
         if (errormsg == 'weak-password') {

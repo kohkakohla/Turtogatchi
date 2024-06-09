@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:turtogatchi/login.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,6 +15,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
+    player.stop();
     player.dispose();
     super.dispose();
   }
@@ -23,12 +23,6 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _initAudioPlayer();
-    player.playerStateStream.listen((state) {
-      print(
-          "Player State: ${state.playing}, Processing State: ${state.processingState}");
-    });
-    player.play();
   }
 
   void _initAudioPlayer() async {
@@ -38,17 +32,26 @@ class SplashScreenState extends State<SplashScreen> {
       print("Setting loop mode");
       await player.setLoopMode(LoopMode.one);
       print("Playing background music");
-      await player.play();
+      if (!player.playing) {
+        print("Player is now playing");
+        await player.play();
+      }
     } catch (error) {
       print("An error occurred: $error");
       // Consider handling the error more gracefully, e.g., showing a user-friendly message.
     }
   }
 
+  void _stopAudioPlayer() async {
+    print("stopping audio player");
+    await player.stop();
+  }
+
   @override
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
+    _initAudioPlayer();
     print("Building splash screen");
     return Stack(
       children: <Widget>[
@@ -92,6 +95,7 @@ class SplashScreenState extends State<SplashScreen> {
                         ),
                       ),
                       onPressed: () {
+                        _stopAudioPlayer();
                         Navigator.pushNamed(context, '/login');
                       },
                       child: const Padding(
@@ -141,13 +145,12 @@ class SplashScreenState extends State<SplashScreen> {
                     elevation: 0,
                     backgroundColor: Colors.transparent,
                     onPressed: () {
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (context) {
-                      //     return const MuseumPopup();
-                      //   },
-                      // );
-                      _initAudioPlayer();
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const MuseumPopup();
+                        },
+                      );
                     },
                     child: Image.asset(
                       "assets/images/gachapage/Collaboration.png",

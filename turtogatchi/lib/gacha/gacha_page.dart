@@ -1,14 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
+import 'package:turtogatchi/global/global.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
 
-class GachaPage extends StatelessWidget {
+class GachaPage extends StatefulWidget {
   const GachaPage({super.key});
+  @override
+  GachaPageState createState() => GachaPageState();
+}
+
+class GachaPageState extends State<GachaPage> {
+  AudioPlayer player = AudioPlayer();
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
+
+  void _initAudioPlayer() async {
+    print("Loading drum audio asset");
+    if (player.playing) {
+      print("Player is already playing");
+      await player.pause();
+      print("paused!");
+    } else {
+      print("Player is not playing");
+      player.setAsset("assets/audio/drum.mp3");
+      await player.play();
+    }
+    // await player.pause();
+    // await player.stop();
+    // Cancel the subscription after getting the current state to avoid memory leaks
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO MAKE THE GACHAFUNCTIONAL
+    _initAudioPlayer();
+
     return Stack(
       children: <Widget>[
         Container(
