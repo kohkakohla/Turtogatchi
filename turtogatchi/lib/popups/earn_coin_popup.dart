@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 
@@ -14,6 +15,15 @@ class EarnPopup extends StatefulWidget {
 class _EarnPopupState extends State<EarnPopup> {
   InterstitialAd? _ad;
   bool _isAdLoaded = false;
+
+  void _launchURL() async {
+    final url = Uri.parse('https://www.turtle-tortoise.com/donate');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   void initState() {
@@ -157,7 +167,7 @@ class _EarnPopupState extends State<EarnPopup> {
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: _launchURL,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
