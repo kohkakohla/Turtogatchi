@@ -6,9 +6,14 @@ import 'package:turtogatchi/popups/settings_popup.dart';
 
 import 'home_buttons.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
   @override
   // TODO ADD BACKGROUD MUSIC HERE
   Widget build(BuildContext context) {
