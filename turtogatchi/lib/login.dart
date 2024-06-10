@@ -42,7 +42,7 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).unfocus();
     });
-    _initAudioPlayer();
+    //_initAudioPlayer();
   }
 
   void _initAudioPlayer() async {
@@ -147,7 +147,7 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     });
     print("Playing background music");
     player.setLoopMode(LoopMode.one);
-    player.play();
+    //player.play();
 
     return Stack(
       children: <Widget>[
