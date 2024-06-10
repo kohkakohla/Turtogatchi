@@ -1,11 +1,8 @@
-import 'dart:ffi' hide Size;
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:turtogatchi/popups/museum_popup.dart';
-
+import 'package:just_audio/just_audio.dart';
+import 'package:turtogatchi/login.dart';
+// import 'package:turtogatchi/popups/museum_popup.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,11 +12,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen> {
-  final AssetsAudioPlayer player = AssetsAudioPlayer();
+  final AudioPlayer player = AudioPlayer();
 
   @override
   void dispose() {
-    player.stop();
     player.dispose();
     super.dispose();
   }
@@ -28,29 +24,25 @@ class SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _initAudioPlayer();
+    player.playerStateStream.listen((state) {
+      print(
+          "Player State: ${state.playing}, Processing State: ${state.processingState}");
+    });
+    player.play();
   }
 
   void _initAudioPlayer() async {
     try {
       print("Loading audio asset");
-      player.open(
-        Audio("assets/audio/bgMusic.mp3"),
-        showNotification: true,
-        autoStart: true,
-      );
+      await player.setAsset("assets/audio/test.mp3");
       print("Setting loop mode");
-      await player.setLoopMode(LoopMode.single);
+      await player.setLoopMode(LoopMode.one);
       print("Playing background music");
       await player.play();
     } catch (error) {
       print("An error occurred: $error");
       // Consider handling the error more gracefully, e.g., showing a user-friendly message.
     }
-  }
-
-  void _stopAudioPlayer() async {
-    print("stopping audio player");
-    await player.stop();
   }
 
   @override
@@ -100,7 +92,6 @@ class SplashScreenState extends State<SplashScreen> {
                         ),
                       ),
                       onPressed: () {
-                        _stopAudioPlayer();
                         Navigator.pushNamed(context, '/login');
                       },
                       child: const Padding(
@@ -150,12 +141,13 @@ class SplashScreenState extends State<SplashScreen> {
                     elevation: 0,
                     backgroundColor: Colors.transparent,
                     onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const MuseumPopup();
-                        },
-                      );
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (context) {
+                      //     return const MuseumPopup();
+                      //   },
+                      // );
+                      _initAudioPlayer();
                     },
                     child: Image.asset(
                       "assets/images/gachapage/Collaboration.png",

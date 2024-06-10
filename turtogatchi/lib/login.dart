@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/sign_up.dart';
+import 'package:just_audio/just_audio.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -20,6 +21,7 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
+  final AudioPlayer player = AudioPlayer();
 
   @override
   void dispose() {
@@ -27,6 +29,7 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     _passwordController.dispose();
     _emailFocusNode.dispose();
     _emailFocusNode.unfocus();
+    player.dispose();
     super.dispose();
   }
 
@@ -39,6 +42,26 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).unfocus();
     });
+    _initAudioPlayer();
+  }
+
+  void _initAudioPlayer() async {
+    player.setAsset('assets/audio/bgMusic.mp3').catchError((error) {
+      print("An error occurred: $error");
+    });
+    print("Playing background music");
+    player.setLoopMode(LoopMode.one);
+    player.play();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      player.pause(); // Pause audio when app is in background
+    } else if (state == AppLifecycleState.resumed) {
+      player.play(); // Resume audio when app comes to foreground
+    }
   }
 
   @override
@@ -66,7 +89,7 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
         // Sign in successful, navigate to home page
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } catch (e) {
         // Sign in failed, show error message
@@ -99,7 +122,7 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
         await FirebaseAuth.instance.signInWithCredential(credential);
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } catch (e) {
         showDialog(
@@ -117,6 +140,14 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
         );
       }
     }
+
+    final player = AudioPlayer();
+    player.setAsset('assets/audio/bgMusic.mp3').catchError((error) {
+      print("An error occurred: $error");
+    });
+    print("Playing background music");
+    player.setLoopMode(LoopMode.one);
+    player.play();
 
     return Stack(
       children: <Widget>[

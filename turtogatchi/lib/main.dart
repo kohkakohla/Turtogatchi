@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:turtogatchi/firebase_options.dart';
 import 'package:turtogatchi/forgot_password.dart';
-import 'package:turtogatchi/gacha/gacha_page.dart';
 import 'package:turtogatchi/home.dart';
 import 'package:turtogatchi/sign_up.dart';
 import 'package:turtogatchi/sign_up_email.dart';
@@ -16,13 +15,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
-
-  runApp(const MyApp());
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure Flutter bindings are initialized
   
   // initialize firebase
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -33,6 +29,8 @@ void main() async {
   // Sign out the user when launching for TESTing purposes
   await FirebaseAuth.instance.signOut();
 
+  runApp(const MyApp());
+  print('');
 }
 
 
@@ -41,7 +39,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Building MyApp");
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
@@ -53,10 +50,8 @@ class MyApp extends StatelessWidget {
           '/splash': (context) => const SplashScreen(),
           '/login': (context) => LoginPage(),
           '/home': (context) => const HomePage(),
-          '/gacha': (context) => const GachaPage(),
-
           '/sign_up': (context) => SignUpPage(),
-          '/sign_up_email': (context) => const SignUpEmailPage(),
+          '/sign_up_email': (context) => SignUpEmailPage(),
           '/forgot_password': (context) => ForgotPasswordPage(),
         });
   }

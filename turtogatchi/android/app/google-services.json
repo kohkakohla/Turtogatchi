@@ -29,13 +29,6 @@
             {
               "client_id": "261300078740-meidgh18nm2s4lfgd7gmlialct7uae63.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "261300078740-2pa0pmtv9dd4k5r4qaaa2ios8ab67eca.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.turtogatchi"
-              }
             }
           ]
         }
