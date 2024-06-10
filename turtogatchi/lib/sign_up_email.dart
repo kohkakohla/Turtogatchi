@@ -28,7 +28,7 @@ class SignUpEmailPageState extends State<SignUpEmailPage> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: _emailController.text, password: _passwordController.text);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       } on FirebaseAuthException catch (e) {
         var errormsg = e.code;
         if (errormsg == 'weak-password') {

@@ -28,7 +28,7 @@ class SignUpPage extends StatelessWidget {
         );
         await FirebaseAuth.instance.signInWithCredential(credential);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           print('The account already exists with a different credential.');
