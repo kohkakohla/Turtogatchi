@@ -2,8 +2,10 @@ import 'dart:ffi' hide Size;
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
