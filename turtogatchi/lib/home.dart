@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:turtogatchi/gacha/gacha_page.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/earn_coin_popup.dart';
@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  AudioPlayer player = AudioPlayer();
+  final AssetsAudioPlayer player = AssetsAudioPlayer();
 
   @override
   void dispose() {
@@ -34,14 +34,16 @@ class HomePageState extends State<HomePage> {
 
   void _initAudioPlayer() async {
     try {
-      print("Loading audio asset");
-      await player.setAsset("assets/audio/test.mp3");
+      print("Loading audio asset for login page");
+      player.open(
+        Audio("assets/audio/bgMusic.mp3"),
+        showNotification: true,
+        autoStart: true,
+      );
       print("Setting loop mode");
-      await player.setLoopMode(LoopMode.one);
+      await player.setLoopMode(LoopMode.single);
       print("Playing background music");
-      if (!player.playing) {
-        await player.play();
-      }
+      await player.play();
     } catch (error) {
       print("An error occurred: $error");
       // Consider handling the error more gracefully, e.g., showing a user-friendly message.
@@ -49,9 +51,13 @@ class HomePageState extends State<HomePage> {
   }
 
   void resetAudio() async {
-    if (!player.playing) {
-      await player.play();
-    }
+    await player.stop();
+    await player.play();
+  }
+
+  void _stopMusic() async {
+    print("stopping audio player");
+    await player.stop();
   }
 
   @override
@@ -244,7 +250,7 @@ class HomePageState extends State<HomePage> {
                                 shadowColor: Colors.transparent,
                               ),
                               onPressed: () {
-                                player.pause();
+                                _stopMusic();
                                 Navigator.pushNamed(
                                   context,
                                   '/gacha',

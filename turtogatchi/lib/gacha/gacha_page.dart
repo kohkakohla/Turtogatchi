@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:lottie/lottie.dart';
-import 'package:turtogatchi/global/global.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
 
 class GachaPage extends StatefulWidget {
@@ -16,7 +15,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   bool _isAnimationActive = false;
 
   late AnimationController _controller;
-  AudioPlayer player = AudioPlayer();
+  final AssetsAudioPlayer player = AssetsAudioPlayer();
   @override
   void initState() {
     super.initState();
@@ -55,16 +54,13 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
 
   void _initAudioPlayer() async {
     print("Loading drum audio assets");
-    await player.setAsset("assets/audio/drums.mp3");
-    if (player.playing) {
-      print("Player is already playing");
-      await player.pause();
-      print("paused!");
-    } else {
-      print("Player is not playing");
+    player.open(
+      Audio("assets/audio/drums.mp3"),
+      showNotification: true,
+      autoStart: true,
+    );
+    await player.play();
 
-      await player.play();
-    }
     // await player.pause();
     // await player.stop();
     // Cancel the subscription after getting the current state to avoid memory leaks
@@ -82,7 +78,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
       });
       print("reset2");
       _controller.reset();
-      player.dispose();
+      player.stop();
     }
   }
 

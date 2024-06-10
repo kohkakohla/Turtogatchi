@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:turtogatchi/firebase_options.dart';
 import 'package:turtogatchi/forgot_password.dart';
 import 'package:turtogatchi/gacha/gacha_page.dart';
@@ -14,8 +12,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
+  //WidgetsFlutterBinding.ensureInitialized();
+
   // Ensure Flutter bindings are initialized
 
   await Firebase.initializeApp(
@@ -26,22 +25,12 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
   @override
   MyAppState createState() => MyAppState();
 }
 
 class MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     print("Building MyApp");
@@ -53,12 +42,12 @@ class MyAppState extends State<MyApp> {
         ),
         initialRoute: '/splash',
         routes: {
-          '/splash': (context) => SplashScreen(),
+          '/splash': (context) => const SplashScreen(),
           '/login': (context) => LoginPage(),
-          '/home': (context) => HomePage(),
-          '/gacha': (context) => GachaPage(),
+          '/home': (context) => const HomePage(),
+          '/gacha': (context) => const GachaPage(),
           '/sign_up': (context) => SignUpPage(),
-          '/sign_up_email': (context) => SignUpEmailPage(),
+          '/sign_up_email': (context) => const SignUpEmailPage(),
           '/forgot_password': (context) => ForgotPasswordPage(),
         });
   }

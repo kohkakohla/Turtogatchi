@@ -1,6 +1,8 @@
+import 'dart:ffi' hide Size;
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,7 +13,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen> {
-  final AudioPlayer player = AudioPlayer();
+  final AssetsAudioPlayer player = AssetsAudioPlayer();
 
   @override
   void dispose() {
@@ -23,19 +25,21 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _initAudioPlayer();
   }
 
   void _initAudioPlayer() async {
     try {
       print("Loading audio asset");
-      await player.setAsset("assets/audio/test.mp3");
+      player.open(
+        Audio("assets/audio/bgMusic.mp3"),
+        showNotification: true,
+        autoStart: true,
+      );
       print("Setting loop mode");
-      await player.setLoopMode(LoopMode.one);
+      await player.setLoopMode(LoopMode.single);
       print("Playing background music");
-      if (!player.playing) {
-        print("Player is now playing");
-        await player.play();
-      }
+      await player.play();
     } catch (error) {
       print("An error occurred: $error");
       // Consider handling the error more gracefully, e.g., showing a user-friendly message.
@@ -51,7 +55,6 @@ class SplashScreenState extends State<SplashScreen> {
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
-    _initAudioPlayer();
     print("Building splash screen");
     return Stack(
       children: <Widget>[

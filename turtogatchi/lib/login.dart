@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/sign_up.dart';
-import 'package:just_audio/just_audio.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -21,7 +20,6 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
-  final AudioPlayer player = AudioPlayer();
 
   @override
   void dispose() {
@@ -29,7 +27,6 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     _passwordController.dispose();
     _emailFocusNode.dispose();
     _emailFocusNode.unfocus();
-    player.dispose();
     super.dispose();
   }
 

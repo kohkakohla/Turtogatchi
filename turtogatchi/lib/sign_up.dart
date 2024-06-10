@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
