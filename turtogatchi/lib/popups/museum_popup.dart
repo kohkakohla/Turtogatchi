@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class MuseumPopup extends StatelessWidget {
-  const MuseumPopup({super.key});
+  const MuseumPopup({Key? key}) : super(key: key);
+
+  Future<void> _launchURL(String url) async {
+    try {
+      await launchUrl(Uri.parse(url));
+    } catch (e) {
+      print('Could not launch $url: $e');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +53,7 @@ class MuseumPopup extends StatelessWidget {
           "assets/images/museum_transparent_background.png",
         ),
       ]),
-      content: const Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
@@ -58,7 +69,10 @@ class MuseumPopup extends StatelessWidget {
                   child: Icon(Icons.link),
                 ),
                 Flexible(
-                  child: Text("Learn more about volunteering and visiting"),
+                  child: InkWell(
+                    onTap: () => _launchURL('https://www.turtle-tortoise.com/volunteer'),
+                    child: Text("Learn more about volunteering and visiting"),
+                  ),
                 ),
               ],
             ),
@@ -71,7 +85,12 @@ class MuseumPopup extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Icon(FontAwesomeIcons.instagram),
                 ),
-                Flexible(child: Text("Instagram")),
+                Flexible(
+                  child: InkWell(
+                    onTap: () => _launchURL('https://www.instagram.com/turtlemuseumsg/'),
+                    child: Text("Instagram"),
+                  ),
+                ),
               ],
             ),
           ),
@@ -83,7 +102,12 @@ class MuseumPopup extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Icon(FontAwesomeIcons.facebook),
                 ),
-                Flexible(child: Text("Facebook")),
+                Flexible(
+                  child: InkWell(
+                    onTap: () => _launchURL('https://www.facebook.com/turtlemuseumsg/'),
+                    child: Text("Facebook"),
+                  ),
+                ),
               ],
             ),
           ),
