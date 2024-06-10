@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,8 +10,6 @@ import 'package:turtogatchi/popups/earn_coin_popup.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/popups/settings_popup.dart';
 
-import 'home_buttons.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -19,6 +19,10 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final AssetsAudioPlayer player = AssetsAudioPlayer();
+  final user = FirebaseAuth.instance.currentUser;
+  //default values
+  var coins = 0;
+  var inventory = [];
 
   @override
   void dispose() {
@@ -30,13 +34,29 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initAudioPlayer();
+    _getUserData();
+  }
+
+  void _getUserData() async {
+    DocumentSnapshot userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .get();
+    if (userData.exists) {
+      setState(() {
+        coins = (userData.data() as Map<String, dynamic>)?['coins'];
+        inventory = (userData.data() as Map<String, dynamic>)?['inventory'];
+      });
+    }
+    print("Coins: $coins");
+    print("Inventory: $inventory");
   }
 
   void _initAudioPlayer() async {
     try {
       print("Loading audio asset for login page");
       player.open(
-        Audio("assets/audio/bgMusic.mp3"),
+        Audio("assets/audio/test.mp3"),
         showNotification: true,
         autoStart: true,
       );
@@ -59,6 +79,8 @@ class HomePageState extends State<HomePage> {
     print("stopping audio player");
     await player.stop();
   }
+
+  // grab
 
   @override
   // TODO ADD BACKGROUD MUSIC HERE
@@ -122,8 +144,8 @@ class HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      // TODO THIS IS THE COIN AMOUNT FROM BACKEND.
-                      "13",
+                      //coin
+                      coins.toString(),
                       style: GoogleFonts.pressStart2p(
                         textStyle: const TextStyle(
                           color: Colors.white,

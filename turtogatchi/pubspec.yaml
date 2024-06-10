@@ -22,6 +22,7 @@ dependencies:
   lottie: ^3.1.2
   provider: ^6.0.1
   assets_audio_player: ^3.0.0
+  cloud_firestore: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -49,7 +50,6 @@ flutter:
     # Add assets from the images directory to the application.
     - assets/
     - assets/audio/
-    - assets/audio/bgMusic.mp3
     - assets/images/
     - assets/images/buttons/
     - assets/images/home/

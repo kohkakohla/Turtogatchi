@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/home.dart';
@@ -86,27 +87,49 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       }
     }
 
+    Future<bool> checkIfUserExists(String googleUserId) async {
+      print("google user");
+      print(googleUserId);
+      final userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(googleUserId)
+          .get();
+      print(userSnapshot.exists);
+      return userSnapshot.exists;
+    }
+
     //firebase sign in with google function
     Future<void> _signInWithGoogle() async {
       try {
         final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        final GoogleSignInAuthentication? googleAuth =
-            googleUser?.authentication as GoogleSignInAuthentication?;
-        final OAuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        await FirebaseAuth.instance.signInWithCredential(credential);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
+        if (googleUser != null) {
+          final GoogleSignInAuthentication googleAuth =
+              await googleUser.authentication;
+
+          // Check if the user already exists in your app's database
+          // User already exists, proceed with sign-in
+          final OAuthCredential credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+          await FirebaseAuth.instance.signInWithCredential(credential);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sign in with Google successful!'),
+            ),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        }
       } catch (e) {
+        // Handle sign-in error
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Sign In Error'),
-            content: Text(e.toString()),
+            content: Text("No account found for this user."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),

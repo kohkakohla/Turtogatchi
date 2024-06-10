@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
@@ -13,6 +15,10 @@ class GachaPage extends StatefulWidget {
 class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   bool _showButton = true;
   bool _isAnimationActive = false;
+  bool _enoughCoins = false;
+  final user = FirebaseAuth.instance.currentUser;
+  var coins = 0;
+  var inventory = [];
 
   late AnimationController _controller;
   final AssetsAudioPlayer player = AssetsAudioPlayer();
@@ -27,6 +33,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         // Perform any action here, like navigating to another page or showing a message
       }
     });
+    _getUserData();
   }
 
   @override
@@ -36,6 +43,28 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  void _getUserData() async {
+    DocumentSnapshot userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .get();
+    if (userData.exists) {
+      setState(() {
+        coins = (userData.data() as Map<String, dynamic>)?['coins'];
+        inventory = (userData.data() as Map<String, dynamic>)?['inventory'];
+      });
+    }
+    print("Coins: $coins");
+    print("Inventory: $inventory");
+  }
+
+  void updateCoinsBackend() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .update({'coins': coins});
+  }
+
   void _beginSpin() {
     // check if user has enough coins
     // if (Global.coins < 10) {
@@ -43,13 +72,21 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     //   return;
     // }
 
-    // update coins in firestore
-    setState(() {
-      _showButton = false;
-      _isAnimationActive = true;
-    });
-    _initAudioPlayer();
-    print("Spinning the gacha!");
+    // update coins in firestore'
+    if (coins < 10) {
+      print("Not enough coins to spin!");
+      setState(() {});
+    } else {
+      setState(() {
+        _showButton = false;
+        _isAnimationActive = true;
+        coins -= 5;
+        updateCoinsBackend();
+
+        _initAudioPlayer();
+        print("Spinning the gacha!");
+      });
+    }
   }
 
   void _initAudioPlayer() async {
@@ -116,12 +153,26 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                   );
                 },
               ),
-
-              // Settings button
-              IconButton(
-                icon: Image.asset("assets/images/settings_icon.png"),
-                onPressed: () {},
+              Row(
+                children: [
+                  IconButton(
+                    icon: Image.asset("assets/images/settings_icon.png"),
+                    onPressed: () {},
+                  ),
+                  Text(
+                    //coin
+                    coins.toString(),
+                    style: GoogleFonts.pressStart2p(
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Image.asset("assets/images/home/coin.png")
+                ],
               )
+              // Settings button
             ],
           ),
 
@@ -168,7 +219,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                                     0,
                                   ),
                                   child: Text(
-                                    '10 Coins to spin!',
+                                    '5 Coins to spin!',
                                     style: GoogleFonts.pressStart2p(
                                       textStyle: const TextStyle(
                                         color: Colors.black,
