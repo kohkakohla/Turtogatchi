@@ -250,7 +250,7 @@ class HomePageState extends State<HomePage> {
                                 shadowColor: Colors.transparent,
                               ),
                               onPressed: () {
-                                _stopMusic();
+                                player.stop();
                                 Navigator.pushNamed(
                                   context,
                                   '/gacha',
