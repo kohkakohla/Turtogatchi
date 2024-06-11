@@ -119,7 +119,7 @@ class HomePageState extends State<HomePage> {
             actions: <Widget>[
               // Inventory button
               IconButton(
-                icon: Image.asset("assets/images/inventory_icon.png"),
+                icon: Image.asset("assets/images/backpack.png"),
                 onPressed: () {
                   Navigator.push(
                     context,
