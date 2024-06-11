@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:turtogatchi/feeding/feeding_popup.dart';
-import 'package:turtogatchi/feeding/hunger_notifier.dart';
 import 'package:turtogatchi/inventory/encyclopedia_page.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/earn_coin_popup.dart';
@@ -24,16 +22,13 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final AssetsAudioPlayer player = AssetsAudioPlayer();
   final user = FirebaseAuth.instance.currentUser;
-  final hungerNotifierProvider =
-      StateNotifierProvider<HungerNotifier, int>((ref) => HungerNotifier(0));
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   StreamSubscription<DocumentSnapshot>? _turtleDataSubscription;
 
   var coins = 0;
   var inventory = [];
+  var turtleSkin = "T01";
   var hunger = 0;
-
-  Timer? _hungerTimer;
 
   @override
   void dispose() {
@@ -46,6 +41,7 @@ class HomePageState extends State<HomePage> {
     super.initState();
     _initAudioPlayer();
     _getUserData();
+    _getTurtleData();
   }
 
   void _getUserData() async {
@@ -70,7 +66,7 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  void getTurtleHunger() async {
+  void _getTurtleData() async {
     if (user != null) {
       _turtleDataSubscription = FirebaseFirestore.instance
           .collection('users')
@@ -81,27 +77,24 @@ class HomePageState extends State<HomePage> {
           .listen((snapshot) {
         if (snapshot.exists) {
           setState(() {
-            hunger = snapshot.data()?['hunger'] ?? 0;
+            turtleSkin = snapshot.data()?['current'] ?? 'T01';
+            hunger = snapshot.data()?['hunger'] ?? 5;
           });
         }
       }, onError: (error) {
         // Handle any errors
-        ///print("Error listening to turtle data changes: $error");
-      });
+        ///print("Error listening to user data changes: $error");
+      }) as StreamSubscription<DocumentSnapshot<Object?>>?;
     }
   }
 
-  void updateHungerBackend(int newHungerLevel) async {
-    if (user != null) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(user!.uid)
-          .collection('turtleState')
-          .doc('turtle')
-          .update({'hunger': newHungerLevel})
-          .then((_) => print('Hunger level updated in the backend.'))
-          .catchError((error) => print('Failed to update user: $error'));
-    }
+  Future<String> _getTurtleSprite() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('Turtle')
+        .doc(turtleSkin)
+        .get();
+
+    return doc.data()?['local_img'] ?? '';
   }
 
   void _initAudioPlayer() async {
@@ -224,9 +217,26 @@ class HomePageState extends State<HomePage> {
               // TURTLE TODO GET FROM DB THE TURTLE.
               Expanded(
                 child: Align(
-                  alignment: Alignment.center,
-                  child: Image.asset("assets/images/home/tigress.png"),
-                ),
+                    alignment: Alignment.center,
+                    child: FutureBuilder<String>(
+                      future: _getTurtleSprite(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator(); // loading circle
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+
+                          /// error msg
+                        } else {
+                          String img = snapshot.data!;
+                          return Image.asset(
+                            "assets/images/turtle/$img", // turtle sprite render
+                          );
+                        }
+                      },
+                    )),
               ),
               // TODO THIS IS THE WORM ANIMATION idk how use
               // SizedBox(

@@ -82,8 +82,10 @@ class EncyclopediaPageState extends State<EncyclopediaPage> {
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     CardTurt card = cards[index].data();
+                                    String id = cards[index].id;
                                     print(cards.length);
                                     return TurtleCard(
+                                        id: id,
                                         img: card.img,
                                         name: card.name,
                                         origin: card.origin,

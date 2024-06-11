@@ -21,10 +21,10 @@ class _FeedingPopupState extends State<FeedingPopup> {
   @override
   void initState() {
     super.initState();
-    _getUserData();
+    _getTurtleData();
   }
 
-  void _getUserData() async {
+  void _getTurtleData() async {
     if (user != null) {
       _userDataSubscription = FirebaseFirestore.instance
           .collection('users')
