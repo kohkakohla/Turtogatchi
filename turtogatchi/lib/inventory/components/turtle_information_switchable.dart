@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:turtogatchi/home.dart';
 import 'package:turtogatchi/inventory/components/footer.dart';
 
-class TurtleInformationPage extends StatelessWidget {
+class TurtleInformationSwitchablePage extends StatefulWidget {
   final String id;
   final String img;
   final String name;
@@ -13,7 +16,7 @@ class TurtleInformationPage extends StatelessWidget {
   final String conservationText;
   final String vulnerable;
 
-  const TurtleInformationPage({
+  const TurtleInformationSwitchablePage({
     Key? key,
     required this.id,
     required this.img,
@@ -25,6 +28,25 @@ class TurtleInformationPage extends StatelessWidget {
     required this.conservationText,
     required this.vulnerable,
   }) : super(key: key);
+
+  @override
+  State<TurtleInformationSwitchablePage> createState() =>
+      _TurtleInformationSwitchablePageState();
+}
+
+class _TurtleInformationSwitchablePageState
+    extends State<TurtleInformationSwitchablePage> {
+  final user = FirebaseAuth.instance.currentUser;
+  String get id => widget.id;
+
+  void updateSkinBackend(String turtleSkin) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .collection('turtleState')
+        .doc('turtle')
+        .update({'current': id});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +100,13 @@ class TurtleInformationPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Image.asset(
-                      "assets/images/local_img/$img",
+                      "assets/images/local_img/${widget.img}",
                     ),
                   ),
 
                   // TURTLE NAME TODO GET FROM BACKEND
                   Text(
-                    name,
+                    widget.name,
                     style: const TextStyle(
                       color: Colors.black,
                       fontFamily: "MarioOutlined",
@@ -128,7 +150,8 @@ class TurtleInformationPage extends StatelessWidget {
 
                                   // NAME
                                   Text(
-                                    species, // TURTLE NAME TODO GET FROM BACKEND
+                                    widget
+                                        .species, // TURTLE NAME TODO GET FROM BACKEND
                                     style: GoogleFonts.pressStart2p(
                                       fontSize: 12,
                                       color: Colors.black,
@@ -174,7 +197,8 @@ class TurtleInformationPage extends StatelessWidget {
 
                                   // NAME
                                   Text(
-                                    origin, // TURTLE NAME TODO GET FROM BACKEND
+                                    widget
+                                        .origin, // TURTLE NAME TODO GET FROM BACKEND
                                     style: GoogleFonts.pressStart2p(
                                       fontSize: 12,
                                       color: Colors.black,
@@ -225,7 +249,8 @@ class TurtleInformationPage extends StatelessWidget {
                                       Row(
                                         children: [
                                           Text(
-                                            vulnerable, // TURTLE NAME TODO GET FROM BACKEND
+                                            widget
+                                                .vulnerable, // TURTLE NAME TODO GET FROM BACKEND
                                             style: GoogleFonts.pressStart2p(
                                               fontSize: 12,
                                               color: Colors.black,
@@ -242,7 +267,7 @@ class TurtleInformationPage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                conservationText,
+                                widget.conservationText,
                                 style: GoogleFonts.pressStart2p(
                                   fontSize: 8,
                                   color: Colors.black,
@@ -254,6 +279,44 @@ class TurtleInformationPage extends StatelessWidget {
                       ),
                     ],
                   ),
+                ],
+              ),
+            ),
+            // TODO MAKE THIS BUTTON NICE
+            ElevatedButton(
+              style: ButtonStyle(
+                fixedSize: WidgetStateProperty.all<Size>(const Size(250, 50)),
+                backgroundColor: WidgetStateProperty.all<Color>(
+                  Colors.white,
+                ),
+                elevation: WidgetStateProperty.all<double>(8.0),
+                shape: WidgetStateProperty.all<OutlinedBorder>(
+                  const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                setState(() {
+                  updateSkinBackend(id);
+                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Switch Turtle",
+                    style: GoogleFonts.pressStart2p(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const Icon(Icons.sync),
                 ],
               ),
             ),

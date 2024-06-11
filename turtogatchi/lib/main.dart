@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:turtogatchi/firebase_options.dart';
 import 'package:turtogatchi/login/forgot_password.dart';
 import 'package:turtogatchi/gacha/gacha_page.dart';
@@ -17,7 +18,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure Flutter bindings are initialized
 

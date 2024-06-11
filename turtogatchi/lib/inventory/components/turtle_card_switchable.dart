@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/inventory/components/turtle_information.dart';
+import 'package:turtogatchi/inventory/components/turtle_information_switchable.dart';
 
-class TurtleCard extends StatefulWidget {
+class TurtleCardSwitchable extends StatefulWidget {
   final String id;
   final String img;
   final String name;
@@ -14,7 +14,7 @@ class TurtleCard extends StatefulWidget {
   final String conservationText;
   final String vulnerable;
 
-  const TurtleCard({
+  const TurtleCardSwitchable({
     Key? key,
     required this.id,
     required this.img,
@@ -28,13 +28,10 @@ class TurtleCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TurtleCard> createState() => _TurtleCardState();
+  State<TurtleCardSwitchable> createState() => _TurtleCardSwitchableState();
 }
 
-class _TurtleCardState extends State<TurtleCard> {
-
-  final user = FirebaseAuth.instance.currentUser;
-  
+class _TurtleCardSwitchableState extends State<TurtleCardSwitchable> {
   String get id => widget.id;
   String get img => widget.img;
   String get name => widget.name;
@@ -52,7 +49,7 @@ class _TurtleCardState extends State<TurtleCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TurtleInformationPage(
+            builder: (context) => TurtleInformationSwitchablePage(
               id: id,
               img: img,
               name: name,

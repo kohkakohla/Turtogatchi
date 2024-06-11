@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:turtogatchi/inventory/components/turtle_card.dart';
+import 'package:turtogatchi/inventory/components/turtle_card_switchable.dart';
 import 'package:turtogatchi/inventory/services/database_service.dart';
 
 import 'components/footer.dart';
@@ -120,7 +121,8 @@ class _InventoryPageState extends State<InventoryPage> {
                                       if (card != null) {
                                         String turtleId = cards[index].id;
                                         if (inventory.contains(turtleId)) {
-                                          return TurtleCard(
+                                          return TurtleCardSwitchable(
+                                            id: turtleId,
                                             img: card.img,
                                             name: card.name,
                                             origin: card.origin,
