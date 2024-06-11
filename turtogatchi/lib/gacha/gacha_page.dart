@@ -1,12 +1,13 @@
-// ignore_for_file: avoid_print
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
-import 'package:turtogatchi/inventory/encylopedia_page.dart';
+import 'package:turtogatchi/inventory/encyclopedia_page.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
 
 class GachaPage extends StatefulWidget {
@@ -22,20 +23,23 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
   var coins = 0;
   var inventory = [];
+  var animationAsset = "assets/accessory.json";
+  var _showFirstAnimation = true;
+  var gatchaResult;
+  var local_img = "unknownTurtle.png";
+  var turtleName = "Unknown Turtle";
 
   late AnimationController _controller;
+  late AnimationController _controllerTwo;
   final AssetsAudioPlayer player = AssetsAudioPlayer();
+
   @override
   void initState() {
     super.initState();
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 4));
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // Animation has completed its single run
-        // Perform any action here, like navigating to another page or showing a message
-      }
-    });
+    _controllerTwo = AnimationController(vsync: this);
+
     _getUserData();
   }
 
@@ -62,6 +66,8 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     } else {
       print("User data does not exist!");
     }
+    print("Coins: $coins");
+    print("Inventory: $inventory");
   }
 
   void updateCoinsBackend() async {
@@ -71,15 +77,31 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         .update({'coins': coins});
   }
 
-  void _beginSpin() {
-    // check if user has enough coins
-    // if (Global.coins < 10) {
-    //   print("Not enough coins to spin!");
-    //   return;
-    // }
+  void _outputDecider() {
+    // Randomly decide the output of the gacha
+    var rng = new Random();
+    var output = rng.nextInt(100);
+    print("Output: $output");
 
+    // 20% chance of getting a turtle
+    if (output < 20) {
+      print("gatcha is here");
+      setState(() {
+        animationAsset = "assets/turtle.json";
+
+        gatchaResult = rng.nextInt(4) + 1;
+      });
+    } else {
+      setState(() {
+        animationAsset = "assets/accessory.json";
+        gatchaResult = 0;
+      });
+    }
+  }
+
+  void _beginSpin() {
     // update coins in firestore'
-    if (coins < 10) {
+    if (coins < 5) {
       print("Not enough coins to spin!");
       setState(() {});
     } else {
@@ -91,6 +113,24 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
 
         _initAudioPlayer();
         print("Spinning the gacha!");
+        _outputDecider();
+
+        _controller.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            if (gatchaResult == 0) {
+              setState(() {
+                _showFirstAnimation = false;
+                animationAsset = "assets/accessory.json";
+              });
+            } else {
+              turtleNameSetState(gatchaResult);
+              setState(() {
+                _showFirstAnimation = false;
+                animationAsset = "assets/turtle.json";
+              });
+            }
+          }
+        });
       });
     }
   }
@@ -109,15 +149,57 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     // Cancel the subscription after getting the current state to avoid memory leaks
   }
 
+  void _updateInventory(String id) async {
+    // update user inventory in firestore
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .get();
+    if (userDoc.exists) {
+      inventory = (userDoc.data() as Map<String, dynamic>)?['inventory'];
+
+      if (!inventory.contains(id)) {
+        inventory.add(id);
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user?.uid)
+            .update({'inventory': inventory});
+      }
+    } else {
+      print("User data does not exist!");
+    }
+  }
+
+  void turtleNameSetState(int id) async {
+    DocumentSnapshot turtleData = await FirebaseFirestore.instance
+        .collection('Turtle')
+        .doc('T0$id')
+        .get();
+    if (turtleData.exists) {
+      setState(() {
+        // pull data form firebase
+        local_img = (turtleData.data() as Map<String, dynamic>)?['local_img'];
+        turtleName = (turtleData.data() as Map<String, dynamic>)?['name'];
+        _updateInventory('T0$id');
+      });
+      // update firebase with new turtle in inventory
+      //_updateInventory('T0$id');
+    } else {
+      print("Turtle data does not exist!");
+    }
+  }
+
   void _resetState() {
     print(_controller.status);
 
-    if (_controller.status == AnimationStatus.completed) {
+    if (_controllerTwo.status == AnimationStatus.completed) {
       setState(() {
         _isAnimationActive = false;
         _showButton = true;
+        _showFirstAnimation = true;
       });
       _controller.reset();
+      _controllerTwo.reset();
       player.stop();
     }
   }
@@ -165,7 +247,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EnclyopediaPage()),
+                            builder: (context) => EncyclopediaPage()),
                       );
                     },
                   ),
@@ -249,7 +331,6 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                           )),
                     )
                   ]),
-
                 if (!_showButton) // Show the Lottie animation when the button is not visible
                   GestureDetector(
                       onTap: () {
@@ -257,17 +338,59 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
 
                         _resetState();
                       },
-                      child: Lottie.asset(
-                        "assets/test.json",
-                        controller: _controller,
-                        onLoaded: (composition) {
-                          // Set the controller bounds to the duration of the Lottie file
-                          _controller
-                            ..duration = composition.duration
-                            ..forward(); // Play the animation a single time
-                        },
-                      )),
-                // The image is always displayed unless you want it to disappear too
+                      child: _showFirstAnimation
+                          ? Lottie.asset("assets/gatcha.json",
+                              controller: _controller, onLoaded: (composition) {
+                              _controller
+                                ..duration = composition.duration
+                                ..forward();
+                            })
+                          : animationAsset == "assets/turtle.json"
+                              ? Stack(
+                                  // Stacks on turtle animation
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Lottie.asset(animationAsset,
+                                        controller: _controllerTwo,
+                                        onLoaded: (composition) {
+                                      _controllerTwo
+                                        ..duration = composition.duration
+                                        ..forward();
+                                    }),
+                                    Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/turtle/$local_img",
+                                            width: 200,
+                                            height: 180,
+                                            fit: BoxFit.contain,
+                                          ),
+                                          Text(
+                                            turtleName,
+                                            style: GoogleFonts.pressStart2p(
+                                              textStyle: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          )
+                                        ]),
+                                  ],
+                                )
+                              : Lottie.asset(animationAsset,
+                                  width: 900,
+                                  height: 900,
+                                  controller: _controllerTwo,
+                                  onLoaded: (composition) {
+                                  _controllerTwo
+                                    ..duration = composition.duration
+                                    ..forward();
+                                })
+
+                      // The image is always displayed unless you want it to disappear too
+                      )
               ],
             ),
           ),
