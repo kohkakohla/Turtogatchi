@@ -53,6 +53,8 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         coins = (userData.data() as Map<String, dynamic>)?['coins'];
         inventory = (userData.data() as Map<String, dynamic>)?['inventory'];
       });
+    } else {
+      print("User data does not exist!");
     }
     print("Coins: $coins");
     print("Inventory: $inventory");
