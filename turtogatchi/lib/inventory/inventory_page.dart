@@ -1,10 +1,70 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:turtogatchi/inventory/components/turtle_card_generator.dart';
 
 import 'components/footer.dart';
 
-class InventoryPage extends StatelessWidget {
+class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
+
+  @override
+  InventoryPageState createState() => InventoryPageState();
+}
+
+class InventoryPageState extends State<InventoryPage> {
+  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
+  final user = FirebaseAuth.instance.currentUser;
+  var inventory = <dynamic>[];
+  var currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserData();
+  }
+
+  void _getUserData() async {
+    if (user != null) {
+      _userDataSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .snapshots()
+          .listen((snapshot) {
+        if (snapshot.exists) {
+          setState(() {
+            inventory = snapshot.data()?['inventory'] ?? [];
+          });
+          print("Inventory: $inventory");
+          _convertStringToInt();
+        } else {
+          print("Document does not exist");
+        }
+      }, onError: (error) {
+        // Handle any errors
+        print("Error listening to user data changes: $error");
+      });
+    }
+  }
+
+  void _convertStringToInt() async {
+    for (var i = 0; i < inventory.length; i++) {
+      print("converting now!");
+      print(int.parse(inventory[i].substring(1)));
+      inventory[i] = int.parse(inventory[i].substring(1));
+    }
+  }
+
+  Widget _initInventory(int id) {
+    print(inventory);
+    if (inventory.contains(id)) {
+      return cardGenerator(true, id);
+    } else {
+      return cardGenerator(false, id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +112,7 @@ class InventoryPage extends StatelessWidget {
                         spacing: 20,
                         runSpacing: 15,
                         children: [
-                          // TODO MAKE FROM DB.
-                          for (var i = 0; i < 5; i++) cardGenerator(true),
-                          for (var i = 0; i < 15; i++) cardGenerator(false),
+                          for (var i = 1; i < 21; i++) _initInventory(i)
                         ],
                       ),
                     ],

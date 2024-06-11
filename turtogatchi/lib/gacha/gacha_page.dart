@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   bool _showButton = true;
   bool _isAnimationActive = false;
   bool _enoughCoins = false;
+  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   final user = FirebaseAuth.instance.currentUser;
   var coins = 0;
   var inventory = [];
@@ -44,18 +47,25 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   }
 
   void _getUserData() async {
-    DocumentSnapshot userData = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user?.uid)
-        .get();
-    if (userData.exists) {
-      setState(() {
-        coins = (userData.data() as Map<String, dynamic>)?['coins'];
-        inventory = (userData.data() as Map<String, dynamic>)?['inventory'];
+    if (user != null) {
+      _userDataSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .snapshots()
+          .listen((snapshot) {
+        if (snapshot.exists) {
+          setState(() {
+            coins = snapshot.data()?['coins'] ?? 0;
+            inventory = snapshot.data()?['inventory'] ?? [];
+          });
+        }
+        print("Coins: $coins");
+        print("Inventory: $inventory");
+      }, onError: (error) {
+        // Handle any errors
+        print("Error listening to user data changes: $error");
       });
     }
-    print("Coins: $coins");
-    print("Inventory: $inventory");
   }
 
   void updateCoinsBackend() async {
@@ -74,7 +84,8 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
 
     // update coins in firestore'
     if (coins < 10) {
-      print("Not enough coins to spin!");
+      // dialog pop up saying not enough
+
       setState(() {});
     } else {
       setState(() {
@@ -104,16 +115,11 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   }
 
   void _resetState() {
-    print("reset");
-    print(_controller.status);
-
     if (_controller.status == AnimationStatus.completed) {
-      print("reset3");
       setState(() {
         _isAnimationActive = false;
         _showButton = true;
       });
-      print("reset2");
       _controller.reset();
       player.stop();
     }

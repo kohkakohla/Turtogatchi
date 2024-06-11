@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final AssetsAudioPlayer player = AssetsAudioPlayer();
   final user = FirebaseAuth.instance.currentUser;
+  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   //default values
   var coins = 0;
   var inventory = [];
@@ -38,18 +41,25 @@ class HomePageState extends State<HomePage> {
   }
 
   void _getUserData() async {
-    DocumentSnapshot userData = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user?.uid)
-        .get();
-    if (userData.exists) {
-      setState(() {
-        coins = (userData.data() as Map<String, dynamic>)?['coins'];
-        inventory = (userData.data() as Map<String, dynamic>)?['inventory'];
+    if (user != null) {
+      _userDataSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .snapshots()
+          .listen((snapshot) {
+        if (snapshot.exists) {
+          setState(() {
+            coins = snapshot.data()?['coins'] ?? 0;
+            inventory = snapshot.data()?['inventory'] ?? [];
+          });
+        }
+        print("Coins: $coins");
+        print("Inventory: $inventory");
+      }, onError: (error) {
+        // Handle any errors
+        print("Error listening to user data changes: $error");
       });
     }
-    print("Coins: $coins");
-    print("Inventory: $inventory");
   }
 
   void _initAudioPlayer() async {

@@ -1,9 +1,57 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/inventory/components/footer.dart';
 
-class TurtleInformationPage extends StatelessWidget {
-  const TurtleInformationPage({super.key});
+class TurtleInformationPage extends StatefulWidget {
+  final int tId;
+  const TurtleInformationPage({Key? key, required this.tId}) : super(key: key);
+
+  @override
+  TurtleInformationPageState createState() => TurtleInformationPageState();
+}
+
+class TurtleInformationPageState extends State<TurtleInformationPage> {
+  var conservationText = "Place holder";
+  var local_img = "assets/images/genericturtle.png";
+  var name = "unnamed";
+  var origin = "unknown";
+  var species = "unknown";
+  var type = "unknown";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getTurtleData();
+  }
+  // grab data from firestore
+
+  void _getTurtleData() async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('Turtle')
+        .doc("T0${widget.tId}")
+        .get();
+    if (documentSnapshot.exists) {
+      print("good it works");
+      setState(() {
+        conservationText = documentSnapshot.get('conservationText');
+        type = documentSnapshot.get('type');
+        local_img =
+            "assets/images/local_img/" + documentSnapshot.get('local_img');
+        name = documentSnapshot.get('name');
+        origin = documentSnapshot.get('origin');
+        species = documentSnapshot.get('species');
+        type = documentSnapshot.get('type');
+      });
+      // Document exists, access its data
+
+      // Use the data as needed
+    } else {
+      print("good it dont fucking works");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +105,14 @@ class TurtleInformationPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Image.asset(
-                      "assets/images/genericturtle.png",
+                      local_img,
                     ),
                   ),
 
                   // TURTLE NAME TODO GET FROM BACKEND
-                  const Text(
-                    "Turtle Name",
-                    style: TextStyle(
+                  Text(
+                    name,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontFamily: "MarioOutlined",
                       fontSize: 30,
@@ -107,7 +155,7 @@ class TurtleInformationPage extends StatelessWidget {
 
                                   // NAME
                                   Text(
-                                    "Species name", // TURTLE NAME TODO GET FROM BACKEND
+                                    species, // TURTLE NAME TODO GET FROM BACKEND
                                     style: GoogleFonts.pressStart2p(
                                       fontSize: 12,
                                       color: Colors.black,
@@ -153,7 +201,7 @@ class TurtleInformationPage extends StatelessWidget {
 
                                   // NAME
                                   Text(
-                                    "Country", // TURTLE NAME TODO GET FROM BACKEND
+                                    origin, // TURTLE NAME TODO GET FROM BACKEND
                                     style: GoogleFonts.pressStart2p(
                                       fontSize: 12,
                                       color: Colors.black,
@@ -221,7 +269,7 @@ class TurtleInformationPage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "Protection of their natural habitats from desertification and human encroachment is crucial. Captive breeding programs also bolster their population and reintroduce them into safe environments. Public awareness campaigns educate people on the importance of protecting this species and discourage the illegal pet trade.",
+                                conservationText,
                                 style: GoogleFonts.pressStart2p(
                                   fontSize: 8,
                                   color: Colors.black,

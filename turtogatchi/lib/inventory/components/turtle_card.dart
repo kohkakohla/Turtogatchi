@@ -3,8 +3,9 @@ import 'package:turtogatchi/inventory/components/turtle_information.dart';
 
 class TurtleCard extends StatefulWidget {
   final bool info;
+  final int id;
 
-  const TurtleCard({super.key, required this.info});
+  const TurtleCard({super.key, required this.info, required this.id});
 
   @override
   State<TurtleCard> createState() => _TurtleCardState();
@@ -20,7 +21,9 @@ class _TurtleCardState extends State<TurtleCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const TurtleInformationPage(),
+            builder: (context) => TurtleInformationPage(
+              tId: widget.id,
+            ),
           ),
         ),
       },
