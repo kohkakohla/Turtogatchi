@@ -95,7 +95,6 @@ class HomePageState extends State<HomePage> {
   @override
   // TODO ADD BACKGROUD MUSIC HERE
   Widget build(BuildContext context) {
-    resetAudio();
     return Stack(
       children: <Widget>[
         Container(
@@ -115,7 +114,7 @@ class HomePageState extends State<HomePage> {
             elevation: 0, // Make AppBar transparent
             title: const Text(
               "My Farm",
-              style: TextStyle(fontFamily: "MarioRegular", fontSize: 12),
+              style: TextStyle(fontFamily: "MarioRegular", fontSize: 18),
             ),
             actions: <Widget>[
               // Inventory button

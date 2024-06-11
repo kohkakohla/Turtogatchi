@@ -69,10 +69,10 @@ class _TurtleCardState extends State<TurtleCard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // TODO LOGO GOES HERE
-                Image.network(
-                  img,
-                  width: 50,
-                  height: 50,
+                Image.asset(
+                  "assets/images/local_img/$img",
+                  width: 125,
+                  height: 125,
                   fit: BoxFit.contain,
                 ),
                 // TODO NAME GOES HERE
