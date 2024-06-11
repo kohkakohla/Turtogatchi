@@ -54,6 +54,7 @@ flutter:
     - assets/audio/
     - assets/images/
     - assets/images/local_img/
+    - assets/images/turtle/
     - assets/images/buttons/
     - assets/images/home/
     - assets/images/splash/

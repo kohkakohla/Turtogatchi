@@ -9,6 +9,7 @@ class TurtleCard extends StatefulWidget {
   final String species;
   final String type;
   final String conservationText;
+  final String vulnerable;
 
   const TurtleCard({
     Key? key,
@@ -19,6 +20,7 @@ class TurtleCard extends StatefulWidget {
     required this.species,
     required this.type,
     required this.conservationText,
+    required this.vulnerable,
   }) : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class _TurtleCardState extends State<TurtleCard> {
   String get species => widget.species;
   String get type => widget.type;
   String get conservationText => widget.conservationText;
+  String get vulnerable => widget.vulnerable;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +45,15 @@ class _TurtleCardState extends State<TurtleCard> {
           context,
           MaterialPageRoute(
             builder: (context) => TurtleInformationPage(
-                img: img,
-                name: name,
-                origin: origin,
-                rarity: rarity,
-                species: species,
-                type: type,
-                conservationText: conservationText),
+              img: img,
+              name: name,
+              origin: origin,
+              rarity: rarity,
+              species: species,
+              type: type,
+              conservationText: conservationText,
+              vulnerable: vulnerable,
+            ),
           ),
         ),
       },
@@ -70,9 +75,9 @@ class _TurtleCardState extends State<TurtleCard> {
               children: [
                 // TODO LOGO GOES HERE
                 Image.asset(
-                  "assets/images/local_img/$img",
-                  width: 125,
-                  height: 125,
+                  "assets/images/turtle/$img",
+                  width: 150,
+                  height: 150,
                   fit: BoxFit.contain,
                 ),
                 // TODO NAME GOES HERE

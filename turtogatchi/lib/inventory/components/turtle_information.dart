@@ -10,6 +10,7 @@ class TurtleInformationPage extends StatelessWidget {
   final String species;
   final String type;
   final String conservationText;
+  final String vulnerable;
 
   const TurtleInformationPage({
     Key? key,
@@ -20,6 +21,7 @@ class TurtleInformationPage extends StatelessWidget {
     required this.species,
     required this.type,
     required this.conservationText,
+    required this.vulnerable,
   }) : super(key: key);
 
   @override
@@ -221,7 +223,7 @@ class TurtleInformationPage extends StatelessWidget {
                                       Row(
                                         children: [
                                           Text(
-                                            "not in database dei", // TURTLE NAME TODO GET FROM BACKEND
+                                            vulnerable, // TURTLE NAME TODO GET FROM BACKEND
                                             style: GoogleFonts.pressStart2p(
                                               fontSize: 12,
                                               color: Colors.black,

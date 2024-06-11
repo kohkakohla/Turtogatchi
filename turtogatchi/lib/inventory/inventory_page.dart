@@ -90,8 +90,8 @@ class _InventoryPageState extends State<InventoryPage> {
                                         rarity: card.rarity,
                                         species: card.species,
                                         type: card.type,
-                                        conservationText:
-                                            card.conservationText);
+                                        conservationText: card.conservationText,
+                                        vulnerable: card.vulnerable);
                                   },
                                 ),
                               );

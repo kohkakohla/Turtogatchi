@@ -6,6 +6,7 @@ class CardTurt {
   String species;
   String type;
   String conservationText;
+  String vulnerable;
 
   CardTurt({
     required this.img,
@@ -15,6 +16,7 @@ class CardTurt {
     required this.species,
     required this.type,
     required this.conservationText,
+    required this.vulnerable,
   });
 
   CardTurt.fromJson(Map<String, dynamic> json)
@@ -24,7 +26,8 @@ class CardTurt {
         rarity = json['rarity'],
         species = json['species'],
         type = json['type'],
-        conservationText = json['conservationText'];
+        conservationText = json['conservationText'],
+        vulnerable = json['vulnerable'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -35,6 +38,7 @@ class CardTurt {
       'species': species,
       'type': type,
       'conservationText': conservationText,
+      'vulnerable': vulnerable,
     };
   }
 }
