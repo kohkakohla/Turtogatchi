@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Add this line to import the cloud_firestore package
 import 'package:turtogatchi/popups/museum_popup.dart';
 
 class SignUpEmailPage extends StatefulWidget {
@@ -18,15 +19,30 @@ class SignUpEmailPageState extends State<SignUpEmailPage> {
   bool _isObscured = true;
 
   @override
-
-  //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
-    //Sign in function here
+    // Function to add user to database
+    Future<void> addToDatabase() async {
+      // add user to firestore
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'email': _emailController.text,
+        'userId': uid,
+        'coins': 100,
+        'inventory': ["T01", "T02"],
+        'adCount': 0
+      });
+    }
+
+    //Sign up function here
+
     Future<void> _signUp() async {
-      // firebase sign up code
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: _emailController.text,
+                password: _passwordController.text)
+            .then((res) => addToDatabase());
+
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       } on FirebaseAuthException catch (e) {

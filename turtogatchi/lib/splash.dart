@@ -34,7 +34,7 @@ class SplashScreenState extends State<SplashScreen> {
     try {
       print("Loading audio asset");
       player.open(
-        Audio("assets/audio/bgMusic.mp3"),
+        Audio("assets/audio/test.mp3"),
         showNotification: true,
         autoStart: true,
       );

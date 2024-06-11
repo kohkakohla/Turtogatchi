@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:google_sign_in/google_sign_in.dart' as google_sign_in;
 import 'package:turtogatchi/home.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,8 +17,19 @@ class SignUpPage extends StatelessWidget {
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
+    Future<void> addToDatabase(String id) async {
+      // add user to firestore
+      await FirebaseFirestore.instance.collection('users').doc(id).set({
+        'email': _emailController.text,
+        'userId': id,
+        'coins': 100,
+        'inventory': ["T01", "T02"],
+        'adCount': 0
+      });
+    }
+
     //Firebase sign up with google function
-    Future<void> _signUpWithGoogle() async {
+    Future<dynamic> _signUpWithGoogle() async {
       // firebase sign up with google mobile app code
       try {
         final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -27,7 +39,9 @@ class SignUpPage extends StatelessWidget {
           accessToken: googleAuth?.accessToken,
           idToken: googleAuth?.idToken,
         );
-        await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance
+            .signInWithCredential(credential)
+            .then((res) => addToDatabase(googleUser!.id.toString()));
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       } on FirebaseAuthException catch (e) {
