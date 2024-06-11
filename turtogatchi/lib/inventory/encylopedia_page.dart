@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:turtogatchi/inventory/components/card.dart';
 import 'package:turtogatchi/inventory/components/turtle_card.dart';
@@ -14,6 +15,7 @@ class EnclyopediaPage extends StatefulWidget {
 
 class EnclyopediaPageState extends State<EnclyopediaPage> {
   final DatabaseService _databaseService = DatabaseService();
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {

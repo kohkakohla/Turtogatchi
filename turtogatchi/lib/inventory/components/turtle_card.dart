@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/inventory/components/turtle_information.dart';
@@ -29,6 +30,7 @@ class TurtleCard extends StatefulWidget {
 }
 
 class _TurtleCardState extends State<TurtleCard> {
+  final user = FirebaseAuth.instance.currentUser;
   String get img => widget.img;
   String get name => widget.name;
   String get origin => widget.origin;
