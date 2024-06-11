@@ -18,6 +18,34 @@ class InventoryPage extends StatefulWidget {
 
 class _InventoryPageState extends State<InventoryPage> {
   final DatabaseService _databaseService = DatabaseService();
+  final user = FirebaseAuth.instance.currentUser;
+  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
+  var inventory = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserInventory();
+  }
+
+  void _getUserInventory() async {
+    if (user != null) {
+      _userDataSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .snapshots()
+          .listen((snapshot) {
+        if (snapshot.exists) {
+          setState(() {
+            inventory = snapshot.data()?['inventory'] ?? ["T01"];
+          });
+        }
+      }, onError: (error) {
+        // Handle any errors
+        ///print("Error listening to user data changes: $error");
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
