@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:turtogatchi/inventory/components/turtle_card_generator.dart';
+import 'package:turtogatchi/inventory/components/card.dart';
+import 'package:turtogatchi/inventory/components/turtle_card.dart';
+import 'package:turtogatchi/inventory/services/database_service.dart';
 
 import 'components/footer.dart';
 
-class InventoryPage extends StatelessWidget {
+class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
+
+  @override
+  State<InventoryPage> createState() => _InventoryPageState();
+}
+
+class _InventoryPageState extends State<InventoryPage> {
+  final DatabaseService _databaseService = DatabaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +62,42 @@ class InventoryPage extends StatelessWidget {
                         runSpacing: 15,
                         children: [
                           // TODO MAKE FROM DB.
-                          for (var i = 0; i < 5; i++) cardGenerator(true),
-                          for (var i = 0; i < 15; i++) cardGenerator(false),
+                          StreamBuilder(
+                            builder: (context, snapshot) {
+                              List cards = snapshot.data?.docs ?? [];
+                              if (cards.isEmpty) {
+                                return const Text('No cards found');
+                              }
+                              return Container(
+                                height: 400,
+                                child: GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2, // number of columns
+                                    crossAxisSpacing:
+                                        10, // spacing between columns
+                                    mainAxisSpacing: 10, // spacing between rows
+                                  ),
+                                  itemCount: cards.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    CardTurt card = cards[index].data();
+                                    print(cards.length);
+                                    return TurtleCard(
+                                        img: card.img,
+                                        name: card.name,
+                                        origin: card.origin,
+                                        rarity: card.rarity,
+                                        species: card.species,
+                                        type: card.type,
+                                        conservationText:
+                                            card.conservationText);
+                                  },
+                                ),
+                              );
+                            },
+                            stream: _databaseService.getCards(),
+                          )
                         ],
                       ),
                     ],

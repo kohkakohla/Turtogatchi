@@ -3,7 +3,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/inventory/components/footer.dart';
 
 class TurtleInformationPage extends StatelessWidget {
-  const TurtleInformationPage({super.key});
+  final String img;
+  final String name;
+  final String origin;
+  final String rarity;
+  final String species;
+  final String type;
+  final String conservationText;
+
+  const TurtleInformationPage({
+    Key? key,
+    required this.img,
+    required this.name,
+    required this.origin,
+    required this.rarity,
+    required this.species,
+    required this.type,
+    required this.conservationText,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +79,9 @@ class TurtleInformationPage extends StatelessWidget {
                   ),
 
                   // TURTLE NAME TODO GET FROM BACKEND
-                  const Text(
-                    "Turtle Name",
-                    style: TextStyle(
+                  Text(
+                    name,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontFamily: "MarioOutlined",
                       fontSize: 30,
@@ -107,7 +124,7 @@ class TurtleInformationPage extends StatelessWidget {
 
                                   // NAME
                                   Text(
-                                    "Species name", // TURTLE NAME TODO GET FROM BACKEND
+                                    species, // TURTLE NAME TODO GET FROM BACKEND
                                     style: GoogleFonts.pressStart2p(
                                       fontSize: 12,
                                       color: Colors.black,
@@ -153,7 +170,7 @@ class TurtleInformationPage extends StatelessWidget {
 
                                   // NAME
                                   Text(
-                                    "Country", // TURTLE NAME TODO GET FROM BACKEND
+                                    origin, // TURTLE NAME TODO GET FROM BACKEND
                                     style: GoogleFonts.pressStart2p(
                                       fontSize: 12,
                                       color: Colors.black,
@@ -204,7 +221,7 @@ class TurtleInformationPage extends StatelessWidget {
                                       Row(
                                         children: [
                                           Text(
-                                            "Vulnerable Status", // TURTLE NAME TODO GET FROM BACKEND
+                                            "not in database dei", // TURTLE NAME TODO GET FROM BACKEND
                                             style: GoogleFonts.pressStart2p(
                                               fontSize: 12,
                                               color: Colors.black,
@@ -221,7 +238,7 @@ class TurtleInformationPage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "Protection of their natural habitats from desertification and human encroachment is crucial. Captive breeding programs also bolster their population and reintroduce them into safe environments. Public awareness campaigns educate people on the importance of protecting this species and discourage the illegal pet trade.",
+                                conservationText,
                                 style: GoogleFonts.pressStart2p(
                                   fontSize: 8,
                                   color: Colors.black,
