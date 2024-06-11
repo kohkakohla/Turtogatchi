@@ -33,7 +33,7 @@ class EncyclopediaPageState extends State<EncyclopediaPage> {
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: "MarioRegular",
-                fontSize: 28,
+                fontSize: 22,
               ),
             ),
             Padding(

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:lottie/lottie.dart';
 import 'package:turtogatchi/feeding/feeding_popup.dart';
 import 'package:turtogatchi/inventory/encyclopedia_page.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
@@ -19,7 +20,7 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final AssetsAudioPlayer player = AssetsAudioPlayer();
   final user = FirebaseAuth.instance.currentUser;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
@@ -29,10 +30,13 @@ class HomePageState extends State<HomePage> {
   var inventory = [];
   var turtleSkin = "T01";
   var hunger = 0;
+  var _wormAnimation = false;
+  late AnimationController _controller;
 
   @override
   void dispose() {
     player.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -42,6 +46,21 @@ class HomePageState extends State<HomePage> {
     _initAudioPlayer();
     _getUserData();
     _getTurtleData();
+    _controller = AnimationController(vsync: this);
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Reset the controller
+        _controller.reset();
+
+        // Update the state
+        setState(() {
+          // Set any state variables you need to update here
+          // For example, if you want to hide the worm animation
+          _wormAnimation = false;
+        });
+      }
+    });
   }
 
   void _getUserData() async {
@@ -231,9 +250,19 @@ class HomePageState extends State<HomePage> {
                           /// error msg
                         } else {
                           String img = snapshot.data!;
-                          return Image.asset(
-                            "assets/images/turtle/$img", // turtle sprite render
-                          );
+                          return Stack(alignment: Alignment.center, children: [
+                            Image.asset("assets/images/turtle/$img"),
+                            if (_wormAnimation)
+                              Lottie.asset(
+                                "assets/eating.json",
+                                controller: _controller,
+                                onLoaded: (composition) {
+                                  _controller.duration = composition.duration;
+                                  _controller.forward();
+                                },
+                              )
+                          ] // turtle sprite render
+                              );
                         }
                       },
                     )),
@@ -272,7 +301,15 @@ class HomePageState extends State<HomePage> {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return const FeedingPopup();
+                                    return FeedingPopup(
+                                      onFeedPressed: () {
+                                        //lottie animation to play...
+                                        setState(() {
+                                          _wormAnimation = true;
+                                        });
+                                      },
+                                      coins: coins,
+                                    );
                                   },
                                 );
                               },

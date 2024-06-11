@@ -6,7 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FeedingPopup extends StatefulWidget {
-  const FeedingPopup({super.key});
+  final VoidCallback onFeedPressed;
+  final int coins;
+
+  const FeedingPopup(
+      {super.key, required this.onFeedPressed, required this.coins});
 
   @override
   State<FeedingPopup> createState() => _FeedingPopupState();
@@ -22,6 +26,16 @@ class _FeedingPopupState extends State<FeedingPopup> {
   void initState() {
     super.initState();
     _getTurtleData();
+  }
+
+  void _updateCoins() async {
+    print('Updating coins in the backend');
+    var coins = widget.coins - 2;
+    print(user?.uid);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .update({'coins': coins});
   }
 
   void _getTurtleData() async {
@@ -136,6 +150,10 @@ class _FeedingPopupState extends State<FeedingPopup> {
                     setState(() {
                       hunger += 1;
                       updateHungerBackend(hunger);
+                      // update backend coins
+                      _updateCoins();
+                      Navigator.pop(context);
+                      widget.onFeedPressed();
                     });
                   },
                   child: Column(
