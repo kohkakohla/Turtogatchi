@@ -84,18 +84,7 @@ class _TurtleCardState extends State<TurtleCard> {
                 Text(name),
               ],
             ),
-          )
-          // const SizedBox( // TODO implement not unlocked yet card
-          //     width: 100,
-          //     height: 100,
-          //     child: Center(
-          //       child: Icon(
-          //         Icons.question_mark_sharp,
-          //         color: Color.fromRGBO(78, 152, 180, 1.0),
-          //       ),
-          //     ),
-          //   ),
-          ),
+          )),
     );
   }
 }

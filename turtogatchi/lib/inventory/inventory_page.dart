@@ -50,7 +50,7 @@ class _InventoryPageState extends State<InventoryPage> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.8,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -69,29 +69,30 @@ class _InventoryPageState extends State<InventoryPage> {
                                 return const Text('No cards found');
                               }
                               return Container(
-                                height: 400,
+                                height: 600,
                                 child: GridView.builder(
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, // number of columns
+                                    crossAxisCount: 3, // number of columns
                                     crossAxisSpacing:
                                         10, // spacing between columns
-                                    mainAxisSpacing: 10, // spacing between rows
+                                    mainAxisSpacing: 12, // spacing between rows
                                   ),
-                                  itemCount: cards.length,
+                                  itemCount: cards.length + 8,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    CardTurt card = cards[index].data();
-                                    print(cards.length);
-                                    return TurtleCard(
+                                    if (index < cards.length) {
+                                      CardTurt card = cards[index].data();
+                                      print(cards.length);
+                                      return TurtleCard(
                                         img: card.img,
                                         name: card.name,
                                         origin: card.origin,
                                         rarity: card.rarity,
                                         species: card.species,
                                         type: card.type,
-                                        conservationText: card.conservationText,
-                                        vulnerable: card.vulnerable);
+                                        conservationText:
+                                            card.conservationText);
                                   },
                                 ),
                               );
@@ -106,7 +107,9 @@ class _InventoryPageState extends State<InventoryPage> {
               ),
 
               // FOOTER
-              const Footer()
+              const Expanded(
+                child: Footer(),
+              ),
             ],
           ),
         ),

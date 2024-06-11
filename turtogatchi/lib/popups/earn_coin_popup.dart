@@ -1,9 +1,11 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-
 
 class EarnPopup extends StatefulWidget {
   const EarnPopup({Key? key}) : super(key: key);
@@ -13,6 +15,10 @@ class EarnPopup extends StatefulWidget {
 }
 
 class _EarnPopupState extends State<EarnPopup> {
+  final user = FirebaseAuth.instance.currentUser;
+  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
+  var coins = 0;
+
   InterstitialAd? _ad;
   bool _isAdLoaded = false;
 
@@ -29,6 +35,33 @@ class _EarnPopupState extends State<EarnPopup> {
   void initState() {
     super.initState();
     _loadAd();
+    _getUserData();
+  }
+
+  void _getUserData() async {
+    if (user != null) {
+      _userDataSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .snapshots()
+          .listen((snapshot) {
+        if (snapshot.exists) {
+          setState(() {
+            coins = snapshot.data()?['coins'] ?? 0;
+          });
+        }
+      }, onError: (error) {
+        // Handle any errors
+        ///print("Error listening to user data changes: $error");
+      });
+    }
+  }
+
+  void updateCoinsBackend() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .update({'coins': coins});
   }
 
   Future<void> _loadAd() async {
@@ -37,14 +70,23 @@ class _EarnPopupState extends State<EarnPopup> {
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (Ad ad) {
-          print('Ad loaded.');
+          //print('Ad loaded.');
           setState(() {
             _ad = ad as InterstitialAd?;
             _isAdLoaded = true;
           });
+          _ad?.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (Ad ad) {
+              //print('Ad dismissed.');
+              setState(() {
+                coins += 1;
+                updateCoinsBackend();
+              });
+            },
+          );
         },
         onAdFailedToLoad: (LoadAdError error) {
-          print('Ad failed to load: $error');
+          //print('Ad failed to load: $error');
           setState(() {
             _ad = null;
             _isAdLoaded = false;
@@ -56,8 +98,6 @@ class _EarnPopupState extends State<EarnPopup> {
 
   @override
   Widget build(BuildContext context) {
-    
-    //TODO MAKE THIS FUNCTIONAL to watch ads and donate
     return AlertDialog(
       // BORDER OF DIALOG
       shape: RoundedRectangleBorder(
@@ -128,11 +168,13 @@ class _EarnPopupState extends State<EarnPopup> {
                       ),
                     ),
                   ),
-                  onPressed: _isAdLoaded ? () {
-          _ad?.show();
-          _ad = null;
-          _isAdLoaded = false;
-        } : null,
+                  onPressed: _isAdLoaded
+                      ? () {
+                          _ad?.show();
+                          _ad = null;
+                          _isAdLoaded = false;
+                        }
+                      : null,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
