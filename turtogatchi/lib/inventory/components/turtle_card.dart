@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/inventory/components/turtle_information.dart';
 
 class TurtleCard extends StatefulWidget {
@@ -76,12 +77,18 @@ class _TurtleCardState extends State<TurtleCard> {
                 // TODO LOGO GOES HERE
                 Image.asset(
                   "assets/images/turtle/$img",
-                  width: 150,
-                  height: 150,
+                  width: 75,
+                  height: 75,
                   fit: BoxFit.contain,
                 ),
                 // TODO NAME GOES HERE
-                Text(name),
+                Text(
+                  name,
+                  style: GoogleFonts.pressStart2p(
+                    fontSize: 10,
+                    color: Colors.black,
+                  ),
+                ),
               ],
             ),
           )),
