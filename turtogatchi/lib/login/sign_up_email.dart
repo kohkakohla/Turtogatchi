@@ -27,8 +27,8 @@ class SignUpEmailPageState extends State<SignUpEmailPage> {
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'email': _emailController.text,
         'userId': uid,
-        'coins': 100,
-        'inventory': ["T01", "T02"],
+        'coins': 15,
+        'inventory': ["T01"],
         'adCount': 0
       });
 

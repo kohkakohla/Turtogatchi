@@ -22,8 +22,8 @@ class SignUpPage extends StatelessWidget {
       await FirebaseFirestore.instance.collection('users').doc(id).set({
         'email': _emailController.text,
         'userId': id,
-        'coins': 100,
-        'inventory': ["T01", "T02"],
+        'coins': 15,
+        'inventory': ["T01"],
         'adCount': 0
       });
     }
