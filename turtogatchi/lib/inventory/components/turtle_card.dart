@@ -77,7 +77,7 @@ class _TurtleCardState extends State<TurtleCard> {
                 // TODO LOGO GOES HERE
                 Image.asset(
                   "assets/images/turtle/$img",
-                  width: 75,
+                  width: 100,
                   height: 75,
                   fit: BoxFit.contain,
                 ),
