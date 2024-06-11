@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:turtogatchi/gacha/gacha_page.dart';
-import 'package:turtogatchi/inventory/inventory_page.dart';
+import 'package:turtogatchi/inventory/enyclopedia.dart';
 import 'package:turtogatchi/popups/earn_coin_popup.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/popups/settings_popup.dart';
@@ -115,7 +115,7 @@ class HomePageState extends State<HomePage> {
             elevation: 0, // Make AppBar transparent
             title: const Text(
               "My Farm",
-              style: TextStyle(fontFamily: "MarioRegular", fontSize: 32),
+              style: TextStyle(fontFamily: "MarioRegular", fontSize: 12),
             ),
             actions: <Widget>[
               // Inventory button
@@ -125,6 +125,15 @@ class HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => InventoryPage()),
+                  );
+                },
+              ),
+              IconButton(
+                icon: Image.asset("assets/images/inventory_icon.png"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EnyclopediaPage()),
                   );
                 },
               ),

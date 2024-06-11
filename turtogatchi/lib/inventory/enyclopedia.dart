@@ -7,14 +7,14 @@ import 'package:turtogatchi/inventory/components/turtle_card_generator.dart';
 
 import 'components/footer.dart';
 
-class InventoryPage extends StatefulWidget {
-  const InventoryPage({super.key});
+class EnyclopediaPage extends StatefulWidget {
+  const EnyclopediaPage({super.key});
 
   @override
-  InventoryPageState createState() => InventoryPageState();
+  EnyclopediaPageState createState() => EnyclopediaPageState();
 }
 
-class InventoryPageState extends State<InventoryPage> {
+class EnyclopediaPageState extends State<EnyclopediaPage> {
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   final user = FirebaseAuth.instance.currentUser;
   var inventory = <dynamic>[];
@@ -78,7 +78,7 @@ class InventoryPageState extends State<InventoryPage> {
         title: Row(
           children: [
             const Text(
-              'Inventory',
+              'Enclyopedia',
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: "MarioRegular",

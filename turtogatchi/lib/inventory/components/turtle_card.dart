@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:turtogatchi/inventory/components/turtle_information.dart';
 
@@ -13,6 +14,23 @@ class TurtleCard extends StatefulWidget {
 
 class _TurtleCardState extends State<TurtleCard> {
   bool get info => widget.info;
+  var name;
+  var icon;
+
+  void _getTurtleData() async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('Turtle')
+        .doc("T0${widget.id}")
+        .get();
+    if (documentSnapshot.exists) {
+      setState(() {
+        name = documentSnapshot.get('name');
+      });
+      // Document exists, access its data
+
+      // Use the data as needed
+    } else {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +65,21 @@ class _TurtleCardState extends State<TurtleCard> {
                     // TODO LOGO GOES HERE
                     Image.asset("assets/images/miniheart.png"),
                     // TODO NAME GOES HERE
-                    const Text("Heart"),
+                    Text(name),
                   ],
                 ),
               )
-            : const SizedBox(
+            : SizedBox(
                 width: 100,
                 height: 100,
-                child: Center(
-                  child: Icon(
-                    Icons.question_mark_sharp,
-                    color: Color.fromRGBO(78, 152, 180, 1.0),
-                  ),
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.question_mark_sharp,
+                      color: Color.fromRGBO(88, 89, 90, 1),
+                    ),
+                    Text(name)
+                  ],
                 ),
               ),
       ),

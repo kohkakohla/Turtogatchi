@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:lottie/lottie.dart';
-import 'package:turtogatchi/inventory/inventory_page.dart';
+import 'package:turtogatchi/inventory/enyclopedia.dart';
 
 class GachaPage extends StatefulWidget {
   const GachaPage({super.key});
