@@ -71,30 +71,33 @@ class _InventoryPageState extends State<InventoryPage> {
                               return Container(
                                 height: 600,
                                 child: GridView.builder(
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3, // number of columns
-                                    crossAxisSpacing:
-                                        10, // spacing between columns
-                                    mainAxisSpacing: 12, // spacing between rows
-                                  ),
-                                  itemCount: cards.length + 8,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    if (index < cards.length) {
-                                      CardTurt card = cards[index].data();
-                                      print(cards.length);
-                                      return TurtleCard(
-                                        img: card.img,
-                                        name: card.name,
-                                        origin: card.origin,
-                                        rarity: card.rarity,
-                                        species: card.species,
-                                        type: card.type,
-                                        conservationText:
-                                            card.conservationText);
-                                  },
-                                ),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3, // number of columns
+                                      crossAxisSpacing:
+                                          10, // spacing between columns
+                                      mainAxisSpacing:
+                                          12, // spacing between rows
+                                    ),
+                                    itemCount: cards.length + 8,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      if (index < cards.length) {
+                                        CardTurt card = cards[index].data();
+                                        print(cards.length);
+                                        return TurtleCard(
+                                          img: card.img,
+                                          name: card.name,
+                                          origin: card.origin,
+                                          rarity: card.rarity,
+                                          species: card.species,
+                                          type: card.type,
+                                          conservationText:
+                                              card.conservationText,
+                                          vulnerable: card.vulnerable,
+                                        );
+                                      }
+                                    }),
                               );
                             },
                             stream: _databaseService.getCards(),
