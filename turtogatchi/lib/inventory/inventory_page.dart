@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:turtogatchi/inventory/components/card.dart';
@@ -15,7 +18,6 @@ class InventoryPage extends StatefulWidget {
 
 class _InventoryPageState extends State<InventoryPage> {
   final DatabaseService _databaseService = DatabaseService();
-  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -81,23 +83,57 @@ class _InventoryPageState extends State<InventoryPage> {
                                       mainAxisSpacing:
                                           12, // spacing between rows
                                     ),
-                                    itemCount: cards.length + 8,
+                                    itemCount: cards.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      if (index < cards.length) {
-                                        CardTurt card = cards[index].data();
-                                        print(cards.length);
-                                        return TurtleCard(
-                                          img: card.img,
-                                          name: card.name,
-                                          origin: card.origin,
-                                          rarity: card.rarity,
-                                          species: card.species,
-                                          type: card.type,
-                                          conservationText:
-                                              card.conservationText,
-                                          vulnerable: card.vulnerable,
-                                        );
+                                      var card = cards[index].data();
+                                      if (card != null) {
+                                        String turtleId = cards[index].id;
+                                        if (inventory.contains(turtleId)) {
+                                          return TurtleCard(
+                                            img: card.img,
+                                            name: card.name,
+                                            origin: card.origin,
+                                            rarity: card.rarity,
+                                            species: card.species,
+                                            type: card.type,
+                                            conservationText:
+                                                card.conservationText,
+                                            vulnerable: card.vulnerable,
+                                          );
+                                        } else {
+                                          return Card.outlined(
+                                              elevation: 4,
+                                              color: const Color.fromRGBO(
+                                                  152, 228, 255, 1.0),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                side: const BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      78, 152, 180, 1.0),
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: SizedBox(
+                                                width: 100,
+                                                height: 100,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset(
+                                                      "assets/images/turtle/unknownTurtle.png",
+                                                      width: 100,
+                                                      height: 75,
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ));
+                                        }
+                                      } else {
+                                        return const SizedBox.shrink();
                                       }
                                     }),
                               );
