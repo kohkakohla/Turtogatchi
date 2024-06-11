@@ -50,7 +50,7 @@ class _InventoryPageState extends State<InventoryPage> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.8,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -69,29 +69,57 @@ class _InventoryPageState extends State<InventoryPage> {
                                 return const Text('No cards found');
                               }
                               return Container(
-                                height: 400,
+                                height: 600,
                                 child: GridView.builder(
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, // number of columns
+                                    crossAxisCount: 3, // number of columns
                                     crossAxisSpacing:
                                         10, // spacing between columns
-                                    mainAxisSpacing: 10, // spacing between rows
+                                    mainAxisSpacing: 12, // spacing between rows
                                   ),
-                                  itemCount: cards.length,
+                                  itemCount: cards.length + 8,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    CardTurt card = cards[index].data();
-                                    print(cards.length);
-                                    return TurtleCard(
+                                    if (index < cards.length) {
+                                      CardTurt card = cards[index].data();
+                                      print(cards.length);
+                                      return TurtleCard(
                                         img: card.img,
                                         name: card.name,
                                         origin: card.origin,
                                         rarity: card.rarity,
                                         species: card.species,
                                         type: card.type,
-                                        conservationText:
-                                            card.conservationText);
+                                        conservationText: card.conservationText,
+                                      );
+                                    } else {
+                                      return Card.outlined(
+                                          elevation: 4,
+                                          color: const Color.fromRGBO(
+                                              152, 228, 255, 1.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            side: const BorderSide(
+                                              color: Color.fromRGBO(
+                                                  78, 152, 180, 1.0),
+                                              width: 2,
+                                            ),
+                                          ),
+                                          child: const SizedBox(
+                                            // TODO implement not unlocked yet card
+                                            width: 100,
+                                            height: 100,
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.question_mark_sharp,
+                                                color: Color.fromRGBO(
+                                                    78, 152, 180, 1.0),
+                                              ),
+                                            ),
+                                          ));
+                                    }
                                   },
                                 ),
                               );
@@ -106,7 +134,9 @@ class _InventoryPageState extends State<InventoryPage> {
               ),
 
               // FOOTER
-              const Footer()
+              const Expanded(
+                child: Footer(),
+              ),
             ],
           ),
         ),

@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
-import 'package:turtogatchi/sign_up.dart';
+import 'package:turtogatchi/login/sign_up.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
