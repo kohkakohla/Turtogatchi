@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:lottie/lottie.dart';
+import 'package:turtogatchi/inventory/encylopedia_page.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
 
 class GachaPage extends StatefulWidget {
@@ -54,6 +55,9 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
       setState(() {
         coins = (userData.data() as Map<String, dynamic>)?['coins'];
         inventory = (userData.data() as Map<String, dynamic>)?['inventory'];
+        if (coins >= 5) {
+          _enoughCoins = true;
+        }
       });
     } else {
       print("User data does not exist!");
@@ -106,16 +110,13 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   }
 
   void _resetState() {
-    print("reset");
     print(_controller.status);
 
     if (_controller.status == AnimationStatus.completed) {
-      print("reset3");
       setState(() {
         _isAnimationActive = false;
         _showButton = true;
       });
-      print("reset2");
       _controller.reset();
       player.stop();
     }
@@ -141,25 +142,32 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
             backgroundColor: Colors.transparent,
             elevation: 0, // Make AppBar transparent
             title: const Text(
-              "Gacha Page",
-              style: TextStyle(fontFamily: "MarioRegular"),
+              "Gacha",
+              style: TextStyle(fontFamily: "MarioRegular", fontSize: 18),
             ),
             actions: <Widget>[
               // Inventory button
-              IconButton(
-                icon: Image.asset("assets/images/inventory_icon.png"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => InventoryPage()),
-                  );
-                },
-              ),
+
               Row(
                 children: [
                   IconButton(
-                    icon: Image.asset("assets/images/settings_icon.png"),
-                    onPressed: () {},
+                      icon: Image.asset("assets/images/backpack.png"),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InventoryPage()),
+                        );
+                      }),
+                  IconButton(
+                    icon: Image.asset("assets/images/inventory_icon.png"),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EnclyopediaPage()),
+                      );
+                    },
                   ),
                   Text(
                     //coin
@@ -167,7 +175,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                     style: GoogleFonts.pressStart2p(
                       textStyle: const TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 18,
                       ),
                     ),
                   ),
@@ -196,7 +204,8 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.black,
-                              backgroundColor: Colors.green,
+                              backgroundColor:
+                                  _enoughCoins ? Colors.green : Colors.red,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0),
                                 side: const BorderSide(color: Colors.black),
@@ -204,7 +213,10 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                               minimumSize: const Size(150, 70),
                             ),
                             onPressed: () {
-                              _beginSpin();
+                              _enoughCoins
+                                  ? _beginSpin()
+                                  : const Dialog(
+                                      child: Text("Not enough coins to spin!"));
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -221,7 +233,9 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                                     0,
                                   ),
                                   child: Text(
-                                    '5 Coins to spin!',
+                                    _enoughCoins
+                                        ? '5 Coins to spin!'
+                                        : 'Not enough coins',
                                     style: GoogleFonts.pressStart2p(
                                       textStyle: const TextStyle(
                                         color: Colors.black,
@@ -240,6 +254,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                   GestureDetector(
                       onTap: () {
                         print("activated");
+
                         _resetState();
                       },
                       child: Lottie.asset(
