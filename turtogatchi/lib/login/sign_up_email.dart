@@ -31,6 +31,16 @@ class SignUpEmailPageState extends State<SignUpEmailPage> {
         'inventory': ["T01", "T02"],
         'adCount': 0
       });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('turtleState')
+          .doc('turtle')
+          .set({
+        'current': 'T01',
+        'hunger': 5,
+      });
     }
 
     //Sign up function here
