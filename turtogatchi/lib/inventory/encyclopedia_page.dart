@@ -6,14 +6,14 @@ import 'package:turtogatchi/inventory/services/database_service.dart';
 
 import 'components/footer.dart';
 
-class EnclyopediaPage extends StatefulWidget {
-  const EnclyopediaPage({super.key});
+class EncyclopediaPage extends StatefulWidget {
+  const EncyclopediaPage({super.key});
 
   @override
-  EnclyopediaPageState createState() => EnclyopediaPageState();
+  EncyclopediaPageState createState() => EncyclopediaPageState();
 }
 
-class EnclyopediaPageState extends State<EnclyopediaPage> {
+class EncyclopediaPageState extends State<EncyclopediaPage> {
   final DatabaseService _databaseService = DatabaseService();
   final user = FirebaseAuth.instance.currentUser;
 
@@ -29,7 +29,7 @@ class EnclyopediaPageState extends State<EnclyopediaPage> {
         title: Row(
           children: [
             const Text(
-              'Inventory',
+              'Encyclopedia',
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: "MarioRegular",
@@ -75,10 +75,10 @@ class EnclyopediaPageState extends State<EnclyopediaPage> {
                                 child: GridView.builder(
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, // number of columns
+                                    crossAxisCount: 3, // number of columns
                                     crossAxisSpacing:
                                         10, // spacing between columns
-                                    mainAxisSpacing: 10, // spacing between rows
+                                    mainAxisSpacing: 12, // spacing between rows
                                   ),
                                   itemCount: cards.length,
                                   itemBuilder:

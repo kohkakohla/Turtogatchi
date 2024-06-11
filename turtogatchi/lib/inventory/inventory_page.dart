@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:turtogatchi/inventory/components/card.dart';
 import 'package:turtogatchi/inventory/components/turtle_card.dart';
 import 'package:turtogatchi/inventory/services/database_service.dart';
 
@@ -68,7 +67,10 @@ class _InventoryPageState extends State<InventoryPage> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Image.asset("assets/images/Book.png"),
+              child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: Image.asset("assets/images/backpack.png")),
             ),
           ],
         ),
@@ -100,7 +102,7 @@ class _InventoryPageState extends State<InventoryPage> {
                               if (cards.isEmpty) {
                                 return const Text('No cards found');
                               }
-                              return Container(
+                              return SizedBox(
                                 height: 600,
                                 child: GridView.builder(
                                     gridDelegate:
