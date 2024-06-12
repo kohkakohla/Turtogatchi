@@ -86,17 +86,10 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   }
 
   Future<void> _updateWorms() async {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(user?.uid)
-        .get();
-    if (userDoc.exists) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user?.uid)
-          .update({'wormCount': wormCount});
-    }
-    ;
+        .update({'wormCount': wormCount});
   }
 
   void _outputDecider() {
@@ -153,8 +146,8 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
             if (gatchaResult == 0) {
               accessoryNameSetState(accessoryResult);
             } else if (gatchaResult == 1) {
-              turtleNameSetState(gatchaResult);
-            } else {
+              turtleNameSetState(turtleResult);
+            } else if (gatchaResult == 2) {
               wormCount += 1;
               _updateWorms();
             }
