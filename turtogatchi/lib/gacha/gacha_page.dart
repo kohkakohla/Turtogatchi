@@ -50,7 +50,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _getUserData() async {
+  Future<void> _getUserData() async {
     DocumentSnapshot userData = await FirebaseFirestore.instance
         .collection('users')
         .doc(user?.uid)
@@ -66,11 +66,9 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     } else {
       print("User data does not exist!");
     }
-    print("Coins: $coins");
-    print("Inventory: $inventory");
   }
 
-  void updateCoinsBackend() async {
+  Future<void> updateCoinsBackend() async {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(user?.uid)
@@ -81,11 +79,9 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     // Randomly decide the output of the gacha
     var rng = new Random();
     var output = rng.nextInt(100);
-    print("Output: $output");
 
     // 20% chance of getting a turtle
     if (output < 20) {
-      print("gatcha is here");
       setState(() {
         animationAsset = "assets/turtle.json";
 
@@ -135,7 +131,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     }
   }
 
-  void _initAudioPlayer() async {
+  Future<void> _initAudioPlayer() async {
     print("Loading drum audio assets");
     player.open(
       Audio("assets/audio/drums.mp3"),
@@ -149,7 +145,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     // Cancel the subscription after getting the current state to avoid memory leaks
   }
 
-  void _updateInventory(String id) async {
+  Future<void> _updateInventory(String id) async {
     // update user inventory in firestore
     DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('users')
@@ -317,7 +313,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                                   child: Text(
                                     _enoughCoins
                                         ? '5 Coins to spin!'
-                                        : 'Not enough coins',
+                                        : 'Need 5 coins to spin',
                                     style: GoogleFonts.pressStart2p(
                                       textStyle: const TextStyle(
                                         color: Colors.black,

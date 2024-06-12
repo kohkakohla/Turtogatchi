@@ -21,24 +21,67 @@ class _FeedingPopupState extends State<FeedingPopup> {
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   var turtleSkin = "T01";
   var hunger = 0;
+  var worms = 0;
+  bool _enoughCoins = false;
+  bool _wormsToFeed = false;
+  
 
   @override
   void initState() {
     super.initState();
     _getTurtleData();
+    _getUserWormCount();
+    if (widget.coins >= 2) {
+      _enoughCoins = true;
+    } 
   }
 
-  void _updateCoins() async {
-    print('Updating coins in the backend');
-    var coins = widget.coins - 2;
-    print(user?.uid);
+  Future<void> _updateCoins() async {
+    if (worms == 0) {
+      if (widget.coins >= 2) {
+        var coins = widget.coins - 2;
+        await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user?.uid)
+          .update({'coins': coins});
+        
+      } 
+      
+    }
+    else {
+      setState(() {
+        worms -= 1;
+        if (worms == 0) {
+          _wormsToFeed = false;
+        } else {
+          _wormsToFeed = true;
+        }
+      }); 
+    }
     await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user?.uid)
-        .update({'coins': coins});
+          .collection('users')
+          .doc(user?.uid)
+          .update({'wormCount': worms});
   }
 
-  void _getTurtleData() async {
+  Future<void> _getUserWormCount() async {
+    if (user != null) {
+      DocumentSnapshot docRef = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      if (docRef.exists) {
+        setState(() {
+          worms = (docRef.data() as Map<String, dynamic>)?['wormCount'];
+          if (worms != 0) {
+            _wormsToFeed = true;
+          }
+        });
+      } 
+    }
+  }
+
+  Future<void> _getTurtleData() async {
     if (user != null) {
       _userDataSubscription = FirebaseFirestore.instance
           .collection('users')
@@ -60,7 +103,7 @@ class _FeedingPopupState extends State<FeedingPopup> {
     }
   }
 
-  void updateHungerBackend(int newHungerLevel) async {
+  Future<void> updateHungerBackend(int newHungerLevel) async {
     if (user != null) {
       if (newHungerLevel >= 0 && newHungerLevel <= 10) {
         FirebaseFirestore.instance
@@ -112,17 +155,20 @@ class _FeedingPopupState extends State<FeedingPopup> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          
           //HEADER
           Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Feed Your Turtle!",
-              style: GoogleFonts.pressStart2p(
-                fontSize: 16,
-                color: Colors.black,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Feed Your Turtle!",
+                  style: GoogleFonts.pressStart2p(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
               ),
-            ),
-          ),
+          
+  
 
           // SUBHEADER
 
@@ -151,12 +197,36 @@ class _FeedingPopupState extends State<FeedingPopup> {
                       hunger += 1;
                       updateHungerBackend(hunger);
                       // update backend coins
-                      _updateCoins();
-                      Navigator.pop(context);
-                      widget.onFeedPressed();
+                      if (_enoughCoins) {
+                        _updateCoins();
+                        Navigator.pop(context);
+                        widget.onFeedPressed();
+                      }
+                      else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Not enough coins!'),
+                              content: Text('Hurry and earn more coins so you can feed!'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Dismiss the dialog
+                                  },
+                                  child: Text('Close'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      
                     });
                   },
-                  child: Column(
+                  child: 
+                  _wormsToFeed
+                  ? Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
@@ -167,9 +237,48 @@ class _FeedingPopupState extends State<FeedingPopup> {
                           color: Colors.black,
                         ),
                       ),
-                      Image.asset("assets/images/worm.png"),
+                      Text(
+                          worms.toString() + " Worms",
+                          style: GoogleFonts.pressStart2p(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Image.asset("assets/images/worm.png"),
                     ],
-                  ),
+                  )
+                  : Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "FEED",
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                        Text(
+                          "2 coins",
+                          style: GoogleFonts.pressStart2p(
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                            color: _enoughCoins ?Colors.black : Colors.red[400],
+                          ),
+                        ),
+                        Image.asset("assets/images/home/coin.png",
+                        width: 20,
+                        height: 20,
+                        ),
+                        ],
+                        ),
+                        Image.asset("assets/images/worm.png"),
+                    ],
+                  )
                 ),
               ),
             ],

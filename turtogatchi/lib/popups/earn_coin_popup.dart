@@ -170,9 +170,50 @@ class _EarnPopupState extends State<EarnPopup> {
                   ),
                   onPressed: _isAdLoaded
                       ? () {
+                          Navigator.pop(context);
                           _ad?.show();
                           _ad = null;
                           _isAdLoaded = false;
+                          showDialog(
+                            
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20), // radius of the outline
+                                side: const BorderSide(
+                                  color: Color.fromRGBO(25, 67, 89, 1.0), // color of the outline
+                                  width: 12, // width of the outline
+                                ),
+                              ),
+                              backgroundColor: const Color.fromRGBO(236, 249, 255, 1.0),
+                              title: Text('Thanks for watching the ad!', style: GoogleFonts.pressStart2p(fontSize: 14, color: Colors.black)),
+                              content: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 200.0, // Maximum height for the dialog
+                                  maxWidth: 300.0, // Maximum width for the dialog
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min, // Use min to make the column wrap its content
+                                  children: [
+                                    const Text('Thanks to your help \nyou earned a coin!', style: TextStyle(fontSize: 14, color: Colors.black)),
+                                    Image.asset('assets/images/home/coin.png'),
+                                  ],
+                                ),
+                              ),
+                              
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Dismiss the dialog
+                                  },
+                                  child: Text('Close'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                         }
                       : null,
                   child: Column(

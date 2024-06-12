@@ -127,10 +127,10 @@ class HomeButtons extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            "HATCH",
+                            "dog",
                             style: GoogleFonts.pressStart2p(
                               textStyle: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.red,
                                   fontSize: 7,
                                   fontWeight: FontWeight.bold),
                             ),

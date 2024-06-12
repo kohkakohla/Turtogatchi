@@ -233,6 +233,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  cron:
+    dependency: "direct main"
+    description:
+      name: cron
+      sha256: f1b69bc71bdb6a4d0efeb0fe49a12bcb41119df4db8120dd5931c8abb2846434
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.2"
   crypto:
     dependency: transitive
     description:

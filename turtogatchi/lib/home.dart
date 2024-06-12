@@ -12,6 +12,7 @@ import 'package:turtogatchi/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/earn_coin_popup.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/popups/settings_popup.dart';
+import 'package:cron/cron.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,11 +26,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   StreamSubscription<DocumentSnapshot>? _turtleDataSubscription;
-
+  var cron = Cron();
   var coins = 0;
   var inventory = [];
   var turtleSkin = "T01";
   var hunger = 0;
+  var _timeToPoop = false;
   var _wormAnimation = false;
   late AnimationController _controller;
 
@@ -46,6 +48,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _initAudioPlayer();
     _getUserData();
     _getTurtleData();
+    _scheduledPoop();
     _controller = AnimationController(vsync: this);
 
     _controller.addStatusListener((status) {
@@ -63,6 +66,22 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> _scheduledPoop() async {
+    print("time to poop hehe");
+    cron.schedule(Schedule.parse('*/1 * * * *'), () async {
+      setState(() {
+        _timeToPoop = true;
+      });
+      print("time to poop hehe");
+    });
+  }
+
+  void _cleanTurtle() {
+    setState(() {
+      _timeToPoop = false;
+    });
+  }
+
   Future<void> _getUserData() async {
     if (user != null) {
       _userDataSubscription = FirebaseFirestore.instance
@@ -76,8 +95,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             inventory = snapshot.data()?['inventory'] ?? [];
           });
         }
-        print("Coins: $coins");
-        print("Inventory: $inventory");
       }, onError: (error) {
         // Handle any errors
         print("Error listening to user data changes: $error");
@@ -116,7 +133,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return doc.data()?['local_img'] ?? '';
   }
 
-  void _initAudioPlayer() async {
+  Future<void> _initAudioPlayer() async {
     try {
       print("Loading audio asset for login page");
       player.open(
@@ -124,9 +141,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         showNotification: true,
         autoStart: true,
       );
-      print("Setting loop mode");
       await player.setLoopMode(LoopMode.single);
-      print("Playing background music");
       await player.play();
     } catch (error) {
       print("An error occurred: $error");
@@ -170,7 +185,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             automaticallyImplyLeading: false,// Make AppBar transparent
             title: const Text(
               "My Farm",
-              style: TextStyle(fontFamily: "MarioRegular", fontSize: 18),
+              style: TextStyle(fontFamily: "MarioRegular", fontSize: 24),
             ),
             actions: <Widget>[
               // Inventory button
@@ -237,6 +252,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               // TURTLE TODO GET FROM DB THE TURTLE.
               Expanded(
+                flex: 8,
                 child: Align(
                     alignment: Alignment.center,
                     child: FutureBuilder<String>(
@@ -269,18 +285,36 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                     )),
               ),
-              // TODO THIS IS THE WORM ANIMATION idk how use
-              // SizedBox(
-              //   child: Lottie.asset("assets/images/eating.json"),
-              // ),
-              // BUTTONS
+              Expanded(
+                  flex: 2,
+                  child: 
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Transform.scale(
+                        scale: 1, // Adjust the scale to make the IconButton smaller
+                        child: IconButton(
+                          iconSize: 10, // You can adjust this size if needed
+                          icon: Image.asset("assets/images/broom.png"),
+                          onPressed: () {
+                            print("Cleaning turtle now bitches");
+                          },
+                        ),
+                      ))),
+              
+
+              /*
+                HOME BUTTON INCLUDES
+                1. FEED BUTTON
+                2. EARN BUTTON
+                3. GATCHA BUTTON
+              */
               Padding(
                 padding: const EdgeInsets.only(bottom: 40.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      width: 110,
+                      width: 115,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.6),
                         borderRadius: const BorderRadius.only(
@@ -404,7 +438,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
+                                        horizontal: 6.0),
                                     child: Text(
                                       "HATCH",
                                       style: GoogleFonts.pressStart2p(
