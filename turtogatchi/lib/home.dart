@@ -280,7 +280,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      width: 110,
+                      width: 115,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.6),
                         borderRadius: const BorderRadius.only(
@@ -404,7 +404,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
+                                        horizontal: 6.0),
                                     child: Text(
                                       "HATCH",
                                       style: GoogleFonts.pressStart2p(
