@@ -24,6 +24,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late AssetsAudioPlayer player;
+  late AssetsAudioPlayer player2;
   final user = FirebaseAuth.instance.currentUser;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   StreamSubscription<DocumentSnapshot>? _turtleDataSubscription;
@@ -31,8 +32,9 @@ class HomePageState extends State<HomePage>
   var coins = 0;
   var inventory = [];
   var turtleSkin = "T01";
-  double hunger = 5;
+  double hunger = 5.0;
   var _isDirty = false;
+  var wormCount = 0;
   var _wormAnimation = false;
   var _cleaningAnimation = false;
   late AnimationController _controller;
@@ -41,8 +43,11 @@ class HomePageState extends State<HomePage>
   @override
   void dispose() {
     player.dispose();
+    player2.dispose();
     _controller.dispose();
     _controllerClean.dispose();
+    _userDataSubscription?.cancel();
+    _turtleDataSubscription?.cancel();
     super.dispose();
   }
 
@@ -164,6 +169,7 @@ class HomePageState extends State<HomePage>
         if (snapshot.exists) {
           setState(() {
             coins = snapshot.data()?['coins'] ?? 0;
+            wormCount = snapshot.data()?['wormCount'] ?? 10;
             inventory = snapshot.data()?['inventory'] ?? [];
           });
         }
@@ -323,17 +329,35 @@ class HomePageState extends State<HomePage>
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      //coin
-                      coins.toString(),
-                      style: GoogleFonts.pressStart2p(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    Image.asset("assets/images/home/coin.png")
+                    Text("")
+                    // Image.asset(
+                    //     width: 150,
+                    //     height: 50,
+                    //     "assets/images/hunger/$hunger.png"),
+                    // Text(
+                    //   //coin
+                    //   coins.toString(),
+                    //   style: GoogleFonts.pressStart2p(
+                    //     textStyle: const TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 18,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Image.asset("assets/images/home/coin.png"),
+                    // Text(
+                    //   wormCount.toString(),
+                    //   style: GoogleFonts.pressStart2p(
+                    //     textStyle: const TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 18,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Image.asset(
+                    //     height: 40,
+                    //     width: 40,
+                    //     "assets/images/worm.png") // worm count
                   ],
                 ),
               ),
@@ -362,9 +386,9 @@ class HomePageState extends State<HomePage>
                             ),
                             Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(0, 0, 0, 275),
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 220),
                                 child: Image.asset(
-                                    width: 250,
+                                    width: 150,
                                     "assets/images/hunger/$hunger.png")),
                             if (_wormAnimation)
                               Padding(
@@ -415,7 +439,7 @@ class HomePageState extends State<HomePage>
                 3. GATCHA BUTTON
               */
               Padding(
-                padding: const EdgeInsets.only(bottom: 40.0),
+                padding: const EdgeInsets.only(bottom: 0.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
