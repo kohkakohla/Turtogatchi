@@ -185,7 +185,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             automaticallyImplyLeading: false,// Make AppBar transparent
             title: const Text(
               "My Farm",
-              style: TextStyle(fontFamily: "MarioRegular", fontSize: 18),
+              style: TextStyle(fontFamily: "MarioRegular", fontSize: 24),
             ),
             actions: <Widget>[
               // Inventory button
