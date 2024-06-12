@@ -23,6 +23,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   // user variables
   var coins = 0;
   var inventory = [];
+  var accessory = [];
   bool _enoughCoins = false;
   // animation related variables
   var animationAsset = "assets/itemPulled.json";
@@ -71,6 +72,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         wormCount = (userData.data() as Map<String, dynamic>)['wormCount'];
         coins = (userData.data() as Map<String, dynamic>)['coins'];
         inventory = (userData.data() as Map<String, dynamic>)['inventory'];
+        accessory = (userData.data() as Map<String, dynamic>)['accessory'];
         if (coins >= 5) {
           _enoughCoins = true;
         }
@@ -92,6 +94,24 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         .collection('users')
         .doc(user?.uid)
         .update({'wormCount': wormCount});
+  }
+
+  Future<void> _updateAccessory(String id) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .get();
+    if (userDoc.exists) {
+      accessory = (userDoc.data() as Map<String, dynamic>)['accessory'];
+
+      if (!accessory.contains(id)) {
+        accessory.add(id);
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user?.uid)
+            .update({'accessory': accessory});
+      }
+    }
   }
 
   Future<void> _updateInventory(String id) async {
@@ -123,7 +143,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         local_img =
             "accessories/${(accessoryData.data() as Map<String, dynamic>)['local_img']}";
         accessoryName = (accessoryData.data() as Map<String, dynamic>)['name'];
-        _updateInventory('A0$id');
+        _updateAccessory('A0$id');
       });
     }
   }
