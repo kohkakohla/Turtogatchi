@@ -192,7 +192,7 @@ class _AccessoryInformationPageState extends State<AccessoryInformationPage> {
                   Text(
                     "Switch Accessory",
                     style: GoogleFonts.pressStart2p(
-                      fontSize: 12,
+                      fontSize: 10,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),

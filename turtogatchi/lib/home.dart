@@ -67,7 +67,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Future<void> _scheduledPoop() async {
-    print("time to poop hehe");
     cron.schedule(Schedule.parse('*/1 * * * *'), () async {
       setState(() {
         _timeToPoop = true;

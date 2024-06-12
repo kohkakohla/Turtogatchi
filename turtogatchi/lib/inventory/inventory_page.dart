@@ -62,15 +62,18 @@ class _InventoryPageState extends State<InventoryPage> {
                   children: [
                     TurtleInventoryPage(),
                     AccessoryInventoryPage(),
+                    
                   ],
                 ),
               ),
+              
             ],
+            
           ),
         ),
       ),
       // FOOTER
-      bottomNavigationBar: const Footer(),
+      
     );
   }
 }
