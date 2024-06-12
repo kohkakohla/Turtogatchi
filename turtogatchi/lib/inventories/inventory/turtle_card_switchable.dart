@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turtogatchi/inventory/components/turtle_information.dart';
-import 'package:turtogatchi/inventory/components/turtle_information_switchable.dart';
+import 'package:turtogatchi/inventories/encyclopedia/components/turtle_information.dart';
+import 'package:turtogatchi/inventories/inventory/turtle_information_switchable.dart';
 
 class TurtleCardSwitchable extends StatefulWidget {
   final String id;

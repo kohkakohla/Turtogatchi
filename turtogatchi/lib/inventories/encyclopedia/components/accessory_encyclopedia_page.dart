@@ -1,49 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:turtogatchi/inventory/components/card.dart';
-import 'package:turtogatchi/inventory/components/turtle_card.dart';
-import 'package:turtogatchi/inventory/services/turtle_database_service.dart';
+import 'package:turtogatchi/inventories/components/card_acc.dart';
+import 'package:turtogatchi/inventories/encyclopedia/components/accessory_card.dart';
+import 'package:turtogatchi/inventories/services/accessory_database_service.dart';
 
-import 'components/footer.dart';
+import '../../components/footer.dart';
 
-class EncyclopediaPage extends StatefulWidget {
-  const EncyclopediaPage({super.key});
+class AccessoryEncyclopediaPage extends StatefulWidget {
+  const AccessoryEncyclopediaPage({super.key});
 
   @override
-  EncyclopediaPageState createState() => EncyclopediaPageState();
+  AccessoryEncyclopediaPageState createState() =>
+      AccessoryEncyclopediaPageState();
 }
 
-class EncyclopediaPageState extends State<EncyclopediaPage> {
-  final TurtleDatabaseService _databaseService = TurtleDatabaseService();
+class AccessoryEncyclopediaPageState extends State<AccessoryEncyclopediaPage> {
+  final AccessoryDatabaseService _databaseService = AccessoryDatabaseService();
   final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(211, 244, 255, 1.0),
-
-      // APPBAR
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: const Color.fromRGBO(211, 244, 255, 1.0),
-        title: Row(
-          children: [
-            const Text(
-              'Encyclopedia',
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: "MarioRegular",
-                fontSize: 22,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Image.asset("assets/images/Book.png"),
-            ),
-          ],
-        ),
-      ),
-
       // INVENTORY CARD DISPLAY
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
@@ -83,24 +61,20 @@ class EncyclopediaPageState extends State<EncyclopediaPage> {
                                   itemCount: cards.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    CardTurt card = cards[index].data();
+                                    CardAcc card = cards[index].data();
                                     String id = cards[index].id;
                                     print(cards.length);
-                                    return TurtleCard(
-                                        id: id,
-                                        img: card.img,
-                                        name: card.name,
-                                        origin: card.origin,
-                                        rarity: card.rarity,
-                                        species: card.species,
-                                        type: card.type,
-                                        conservationText: card.conservationText,
-                                        vulnerable: card.vulnerable);
+                                    return AccessoryCard(
+                                      id: id,
+                                      img: card.img,
+                                      name: card.name,
+                                      description: card.description,
+                                    );
                                   },
                                 ),
                               );
                             },
-                            stream: _databaseService.getTurtleCards(),
+                            stream: _databaseService.getAccessoryCards(),
                           )
                         ],
                       ),
