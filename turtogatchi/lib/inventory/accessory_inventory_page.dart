@@ -20,7 +20,7 @@ class _AccessoryInventoryPageState extends State<AccessoryInventoryPage> {
   var accessory = ["A01"];
 
   Stream<QuerySnapshot> getAccessoryCards() {
-    return FirebaseFirestore.instance.collection("Accessory").snapshots();
+    return FirebaseFirestore.instance.collection(" Accessory").snapshots();
   }
 
   @override
@@ -97,19 +97,20 @@ class _AccessoryInventoryPageState extends State<AccessoryInventoryPage> {
                                       print(accessory.toString());
                                       if (accessory.contains(accessoryId)) {
                                         return AccessoryCard(
-                                          id: "A01",
+                                          id: accessoryId,
                                           img: card.img,
                                           name: card.name,
                                           description: card.description,
                                         );
                                       }
                                     } else {
+                                      print("no stream");
                                       return const SizedBox.shrink();
                                     }
                                   }),
                             );
                           },
-                          stream: getAccessoryCards(),
+                          stream: _databaseService.getAccessoryCards(),
                         )
                       ],
                     ),

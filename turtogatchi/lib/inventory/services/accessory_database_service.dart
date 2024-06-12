@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:turtogatchi/inventory/components/card_acc.dart';
 
-const String ACCESSORY_COLLECTION_REF = 'Accessory';
+const String ACCESSORY_COLLECTION_REF = ' Accessory';
 
 class AccessoryDatabaseService {
   final _firestore = FirebaseFirestore.instance;
