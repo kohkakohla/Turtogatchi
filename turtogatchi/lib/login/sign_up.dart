@@ -182,7 +182,36 @@ class SignUpPage extends StatelessWidget {
                                   minimumSize: const Size(328, 50),
                                 ),
                                 onPressed: () {
-                                  _signUpWithGoogle();
+                                  // Dialoug box
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                              'Google users are currently Bugged'),
+                                          content: const Text(
+                                              'Users are able to authenicate and automatically sign in via google api and their google accounts but users under the google provider are known to cause bugs after a while in app causing user to force sign out, or unable to authenicate with firestore after some time.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text('Cancel'),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text('Continue'),
+                                              onPressed: () {
+                                                // Proceed with Google Sign Up
+                                                //_signUpWithGoogle();
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                  //_signUpWithGoogle();
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

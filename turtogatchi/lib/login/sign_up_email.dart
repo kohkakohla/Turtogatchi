@@ -29,7 +29,8 @@ class SignUpEmailPageState extends State<SignUpEmailPage> {
         'userId': uid,
         'coins': 15,
         'inventory': ["T01"],
-        'adCount': 0
+        'adCount': 0,
+        'accessory': [],
       });
 
       await FirebaseFirestore.instance

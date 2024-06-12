@@ -16,9 +16,14 @@ import 'package:turtogatchi/login/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:turtogatchi/routeObserver.dart';
 
 void main() async {
-  runApp(ProviderScope(child: MyApp()));
+  final RouteObserver = CustomRouteObserver();
+  runApp(ProviderScope(
+      child: MyApp(
+    routeObserver: RouteObserver,
+  )));
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure Flutter bindings are initialized
 
@@ -39,25 +44,28 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final CustomRouteObserver routeObserver;
+  const MyApp({super.key, required this.routeObserver});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        initialRoute: '/splash',
-        routes: {
-          '/splash': (context) => const SplashScreen(),
-          '/login': (context) => LoginPage(),
-          '/home': (context) => const HomePage(),
-          '/gacha': (context) => const GachaPage(),
-          '/sign_up': (context) => SignUpPage(),
-          '/sign_up_email': (context) => const SignUpEmailPage(),
-          '/forgot_password': (context) => ForgotPasswordPage(),
-        });
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: '/splash',
+      routes: {
+        '/splash': (context) => const SplashScreen(),
+        '/login': (context) => LoginPage(),
+        '/home': (context) => const HomePage(),
+        '/gacha': (context) => const GachaPage(),
+        '/sign_up': (context) => SignUpPage(),
+        '/sign_up_email': (context) => const SignUpEmailPage(),
+        '/forgot_password': (context) => ForgotPasswordPage(),
+      },
+      navigatorObservers: [routeObserver],
+    );
   }
 }
