@@ -22,6 +22,7 @@ class _FeedingPopupState extends State<FeedingPopup> {
   var turtleSkin = "T01";
   var hunger = 0;
   var worms = 0;
+  bool _enoughCoins = false;
   bool _wormsToFeed = false;
   
 
@@ -30,16 +31,22 @@ class _FeedingPopupState extends State<FeedingPopup> {
     super.initState();
     _getTurtleData();
     _getUserWormCount();
+    if (widget.coins >= 2) {
+      _enoughCoins = true;
+    } 
   }
 
   Future<void> _updateCoins() async {
     if (worms == 0) {
-      
-      var coins = widget.coins - 2;
-      await FirebaseFirestore.instance
+      if (widget.coins >= 2) {
+        var coins = widget.coins - 2;
+        await FirebaseFirestore.instance
           .collection('users')
           .doc(user?.uid)
           .update({'coins': coins});
+        
+      } 
+      
     }
     else {
       setState(() {
@@ -190,9 +197,31 @@ class _FeedingPopupState extends State<FeedingPopup> {
                       hunger += 1;
                       updateHungerBackend(hunger);
                       // update backend coins
-                      _updateCoins();
-                      Navigator.pop(context);
-                      widget.onFeedPressed();
+                      if (_enoughCoins) {
+                        _updateCoins();
+                        Navigator.pop(context);
+                        widget.onFeedPressed();
+                      }
+                      else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Not enough coins!'),
+                              content: Text('Hurry and earn more coins so you can feed!'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Dismiss the dialog
+                                  },
+                                  child: Text('Close'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      
                     });
                   },
                   child: 
@@ -238,7 +267,7 @@ class _FeedingPopupState extends State<FeedingPopup> {
                           style: GoogleFonts.pressStart2p(
                             fontSize: 8,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: _enoughCoins ?Colors.black : Colors.red[400],
                           ),
                         ),
                         Image.asset("assets/images/home/coin.png",
