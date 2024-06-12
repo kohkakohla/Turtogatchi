@@ -10,6 +10,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 import 'package:turtogatchi/inventory/encyclopedia_page.dart';
 import 'package:turtogatchi/inventory/inventory_page.dart';
+import 'package:turtogatchi/popups/museum_popup.dart';
 
 class GachaPage extends StatefulWidget {
   const GachaPage({super.key});
@@ -518,7 +519,12 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                     elevation: 0,
                     backgroundColor: Colors.transparent,
                     onPressed: () {
-                      // Your onPressed code here
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const MuseumPopup();
+                        },
+                      );
                     },
                     child: Image.asset(
                       "assets/images/gachapage/Collaboration.png",

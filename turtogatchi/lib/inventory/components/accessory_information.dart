@@ -150,7 +150,7 @@ class _AccessoryInformationPageState extends State<AccessoryInformationPage> {
                               child: Text(
                                 widget.description,
                                 style: GoogleFonts.pressStart2p(
-                                  fontSize: 8,
+                                  fontSize: 10,
                                   color: Colors.black,
                                 ),
                               ),
