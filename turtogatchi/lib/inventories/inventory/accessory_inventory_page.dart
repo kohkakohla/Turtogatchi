@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:turtogatchi/inventory/components/accessory_card.dart';
-import 'package:turtogatchi/inventory/services/accessory_database_service.dart';
+import 'package:turtogatchi/inventories/inventory/accessory_card_switchable.dart';
+import 'package:turtogatchi/inventories/services/accessory_database_service.dart';
 
 class AccessoryInventoryPage extends StatefulWidget {
   const AccessoryInventoryPage({Key? key}) : super(key: key);
@@ -38,7 +38,7 @@ class _AccessoryInventoryPageState extends State<AccessoryInventoryPage> {
           .listen((snapshot) {
         if (snapshot.exists) {
           setState(() {
-            accessory = (snapshot.data()?['inventory'] as List<dynamic>)
+            accessory = (snapshot.data()?['accessory'] as List<dynamic>)
                     .cast<String>() ??
                 [];
           });
@@ -77,6 +77,9 @@ class _AccessoryInventoryPageState extends State<AccessoryInventoryPage> {
                             if (cards.isEmpty) {
                               return const Text('No cards found');
                             }
+                            List cardsInInventory = cards
+                                .where((card) => accessory.contains(card.id))
+                                .toList();
                             return SizedBox(
                               height: 511,
                               child: GridView.builder(
@@ -87,16 +90,17 @@ class _AccessoryInventoryPageState extends State<AccessoryInventoryPage> {
                                         10, // spacing between columns
                                     mainAxisSpacing: 12, // spacing between rows
                                   ),
-                                  itemCount: cards.length,
+                                  itemCount: cardsInInventory.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    var card = cards[index].data();
+                                    var card = cardsInInventory[index].data();
                                     if (card != null) {
-                                      var accessoryId = cards[index].id;
+                                      var accessoryId =
+                                          cardsInInventory[index].id;
                                       print(accessoryId);
                                       print(accessory.toString());
                                       if (accessory.contains(accessoryId)) {
-                                        return AccessoryCard(
+                                        return AccessoryCardSwitchable(
                                           id: accessoryId,
                                           img: card.img,
                                           name: card.name,

@@ -1,48 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turtogatchi/inventory/components/turtle_information.dart';
+import 'package:turtogatchi/inventories/inventory/accessory_information_switchable.dart';
 
-class TurtleCard extends StatefulWidget {
+class AccessoryCardSwitchable extends StatefulWidget {
   final String id;
   final String img;
   final String name;
-  final String origin;
-  final String rarity;
-  final String species;
-  final String type;
-  final String conservationText;
-  final String vulnerable;
+  final String description;
 
-  const TurtleCard({
+  const AccessoryCardSwitchable({
     Key? key,
     required this.id,
     required this.img,
     required this.name,
-    required this.origin,
-    required this.rarity,
-    required this.species,
-    required this.type,
-    required this.conservationText,
-    required this.vulnerable,
+    required this.description,
   }) : super(key: key);
 
   @override
-  State<TurtleCard> createState() => _TurtleCardState();
+  State<AccessoryCardSwitchable> createState() =>
+      _AccessoryCardSwitchableState();
 }
 
-class _TurtleCardState extends State<TurtleCard> {
+class _AccessoryCardSwitchableState extends State<AccessoryCardSwitchable> {
   final user = FirebaseAuth.instance.currentUser;
 
   String get id => widget.id;
   String get img => widget.img;
   String get name => widget.name;
-  String get origin => widget.origin;
-  String get rarity => widget.rarity;
-  String get species => widget.species;
-  String get type => widget.type;
-  String get conservationText => widget.conservationText;
-  String get vulnerable => widget.vulnerable;
+  String get description => widget.description;
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +37,11 @@ class _TurtleCardState extends State<TurtleCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TurtleInformationPage(
+            builder: (context) => AccessoryInformationSwitchablePage(
               id: id,
               img: img,
               name: name,
-              origin: origin,
-              rarity: rarity,
-              species: species,
-              type: type,
-              conservationText: conservationText,
-              vulnerable: vulnerable,
+              description: description,
             ),
           ),
         ),
@@ -83,7 +64,7 @@ class _TurtleCardState extends State<TurtleCard> {
               children: [
                 // TODO LOGO GOES HERE
                 Image.asset(
-                  "assets/images/turtle/$img.png",
+                  "assets/images/accessories/$img",
                   width: 100,
                   height: 75,
                   fit: BoxFit.contain,

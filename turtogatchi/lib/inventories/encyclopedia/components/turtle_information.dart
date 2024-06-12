@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turtogatchi/inventory/components/footer.dart';
+import 'package:turtogatchi/inventories/components/footer.dart';
 
 class TurtleInformationPage extends StatelessWidget {
   final String id;

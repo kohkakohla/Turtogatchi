@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:turtogatchi/inventory/accessory_inventory_page.dart';
-import 'package:turtogatchi/inventory/turtle_inventory_page.dart';
+import 'package:turtogatchi/inventories/inventory/accessory_inventory_page.dart';
+import 'package:turtogatchi/inventories/inventory/turtle_inventory_page.dart';
 
-import 'components/footer.dart';
+import '../components/footer.dart';
 
 class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
@@ -57,23 +57,19 @@ class _InventoryPageState extends State<InventoryPage> {
                   ],
                 ),
               ),
-              const Expanded(
+              Expanded(
                 child: TabBarView(
                   children: [
-                    TurtleInventoryPage(),
-                    AccessoryInventoryPage(),
-                    
+                    TurtleInventoryPage(key: ValueKey(DateTime.now())),
+                    AccessoryInventoryPage(key: ValueKey(DateTime.now())),
                   ],
                 ),
               ),
-              
             ],
-            
           ),
         ),
       ),
       // FOOTER
-      
     );
   }
 }

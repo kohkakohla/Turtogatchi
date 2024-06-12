@@ -3,13 +3,12 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
-import 'package:turtogatchi/inventory/encyclopedia_page.dart';
-import 'package:turtogatchi/inventory/inventory_page.dart';
+import 'package:turtogatchi/inventories/encyclopedia/encyclopedia_page.dart';
+import 'package:turtogatchi/inventories/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 
 class GachaPage extends StatefulWidget {

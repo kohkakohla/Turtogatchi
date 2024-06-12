@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:turtogatchi/inventory/components/turtle_card.dart';
-import 'package:turtogatchi/inventory/components/turtle_card_switchable.dart';
-import 'package:turtogatchi/inventory/services/turtle_database_service.dart';
+import 'package:turtogatchi/inventories/components/card.dart';
+import 'package:turtogatchi/inventories/encyclopedia/components/turtle_card.dart';
+import 'package:turtogatchi/inventories/inventory/turtle_card_switchable.dart';
+import 'package:turtogatchi/inventories/services/turtle_database_service.dart';
 
 class TurtleInventoryPage extends StatefulWidget {
   const TurtleInventoryPage({Key? key}) : super(key: key);
@@ -72,41 +73,41 @@ class _TurtleInventoryPageState extends State<TurtleInventoryPage> {
                             if (cards.isEmpty) {
                               return const Text('No cards found');
                             }
+                            List cardsInInventory = cards
+                                .where((card) => inventory.contains(card.id))
+                                .toList();
                             return SizedBox(
-                              height: 511,
-                              child: GridView.builder(
+                                height: 400,
+                                child: GridView.builder(
+                                  itemCount: cardsInInventory.length,
                                   gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                      SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3, // number of columns
                                     crossAxisSpacing:
                                         10, // spacing between columns
                                     mainAxisSpacing: 12, // spacing between rows
                                   ),
-                                  itemCount: cards.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    var card = cards[index].data();
+                                    CardTurt card =
+                                        cardsInInventory[index].data();
+                                    String id = cardsInInventory[index].id;
                                     if (card != null) {
-                                      String turtleId = cards[index].id;
-                                      if (inventory.contains(turtleId)) {
-                                        return TurtleCardSwitchable(
-                                          id: turtleId,
-                                          img: card.img,
-                                          name: card.name,
-                                          origin: card.origin,
-                                          rarity: card.rarity,
-                                          species: card.species,
-                                          type: card.type,
-                                          conservationText:
-                                              card.conservationText,
-                                          vulnerable: card.vulnerable,
-                                        );
-                                      }
-                                    } else {
-                                      return const SizedBox.shrink();
+                                      // assuming inventory is a list of ids
+                                      return TurtleCardSwitchable(
+                                        id: id,
+                                        img: card.img,
+                                        name: card.name,
+                                        origin: card.origin,
+                                        rarity: card.rarity,
+                                        species: card.species,
+                                        type: card.type,
+                                        conservationText: card.conservationText,
+                                        vulnerable: card.vulnerable,
+                                      );
                                     }
-                                  }),
-                            );
+                                  },
+                                ));
                           },
                           stream: _databaseService.getTurtleCards(),
                         )

@@ -3,49 +3,39 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/home.dart';
-import 'package:turtogatchi/inventory/components/footer.dart';
+import 'package:turtogatchi/inventories/components/footer.dart';
 
-class TurtleInformationSwitchablePage extends StatefulWidget {
+class AccessoryInformationSwitchablePage extends StatefulWidget {
   final String id;
   final String img;
   final String name;
-  final String origin;
-  final String rarity;
-  final String species;
-  final String type;
-  final String conservationText;
-  final String vulnerable;
+  final String description;
 
-  const TurtleInformationSwitchablePage({
+  const AccessoryInformationSwitchablePage({
     Key? key,
     required this.id,
     required this.img,
     required this.name,
-    required this.origin,
-    required this.rarity,
-    required this.species,
-    required this.type,
-    required this.conservationText,
-    required this.vulnerable,
+    required this.description,
   }) : super(key: key);
 
   @override
-  State<TurtleInformationSwitchablePage> createState() =>
-      _TurtleInformationSwitchablePageState();
+  State<AccessoryInformationSwitchablePage> createState() =>
+      _AccessoryInformationSwitchablePageState();
 }
 
-class _TurtleInformationSwitchablePageState
-    extends State<TurtleInformationSwitchablePage> {
+class _AccessoryInformationSwitchablePageState
+    extends State<AccessoryInformationSwitchablePage> {
   final user = FirebaseAuth.instance.currentUser;
   String get id => widget.id;
 
-  void updateSkinBackend(String turtleSkin) async {
+  void updateAccessoryBackend(String turtleSkin) async {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(user?.uid)
         .collection('turtleState')
         .doc('turtle')
-        .update({'current': id});
+        .update({'accessory': id});
   }
 
   @override
@@ -59,7 +49,7 @@ class _TurtleInformationSwitchablePageState
         title: Row(
           children: [
             const Text(
-              "Turtle Information",
+              "Accessory Information",
               style: TextStyle(
                   color: Colors.black,
                   fontFamily: "MarioRegular",
@@ -100,7 +90,7 @@ class _TurtleInformationSwitchablePageState
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Image.asset(
-                      "assets/images/local_img/${widget.img}.png",
+                      "assets/images/accessories/${widget.img}",
                     ),
                   ),
 
@@ -117,100 +107,7 @@ class _TurtleInformationSwitchablePageState
                   // TURTLE DETAILS TODO GET FROM BACKEND
                   Column(
                     children: [
-                      // SPECIES
-                      Container(
-                        margin: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            // IMAGE
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset("assets/images/species.png"),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Column(
-                                textDirection: TextDirection.ltr,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // HEADER
-                                  Text(
-                                    "Species",
-                                    style: GoogleFonts.pressStart2p(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 0.1,
-                                    ),
-                                  ),
-
-                                  // NAME
-                                  Text(
-                                    widget
-                                        .species, // TURTLE NAME TODO GET FROM BACKEND
-                                    style: GoogleFonts.pressStart2p(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // ORIGIN
-                      Container(
-                        margin: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            // IMAGE
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset("assets/images/origin.png"),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Column(
-                                textDirection: TextDirection.ltr,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // HEADER
-                                  Text(
-                                    "Origin",
-                                    style: GoogleFonts.pressStart2p(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 0.1,
-                                    ),
-                                  ),
-
-                                  // NAME
-                                  Text(
-                                    widget
-                                        .origin, // TURTLE NAME TODO GET FROM BACKEND
-                                    style: GoogleFonts.pressStart2p(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // CONSERVATION STATUS
+                      // DESCRIPTION
                       Container(
                         margin: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -236,28 +133,13 @@ class _TurtleInformationSwitchablePageState
                                     children: [
                                       // HEADER
                                       Text(
-                                        "Conservation",
+                                        "Description",
                                         style: GoogleFonts.pressStart2p(
                                           fontSize: 18,
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                           letterSpacing: 0.1,
                                         ),
-                                      ),
-
-                                      // NAME
-                                      Row(
-                                        children: [
-                                          Text(
-                                            widget
-                                                .vulnerable, // TURTLE NAME TODO GET FROM BACKEND
-                                            style: GoogleFonts.pressStart2p(
-                                              fontSize: 12,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          Image.asset("assets/images/Book.png"),
-                                        ],
                                       ),
                                     ],
                                   ),
@@ -267,9 +149,9 @@ class _TurtleInformationSwitchablePageState
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                widget.conservationText,
+                                widget.description,
                                 style: GoogleFonts.pressStart2p(
-                                  fontSize: 8,
+                                  fontSize: 10,
                                   color: Colors.black,
                                 ),
                               ),
@@ -298,7 +180,7 @@ class _TurtleInformationSwitchablePageState
               ),
               onPressed: () {
                 setState(() {
-                  updateSkinBackend(id);
+                  updateAccessoryBackend(id);
                 });
                 Navigator.push(
                   context,
@@ -309,9 +191,9 @@ class _TurtleInformationSwitchablePageState
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    "Switch Turtle",
+                    "Switch Accessory",
                     style: GoogleFonts.pressStart2p(
-                      fontSize: 12,
+                      fontSize: 10,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -320,7 +202,6 @@ class _TurtleInformationSwitchablePageState
                 ],
               ),
             ),
-
             const Footer(),
           ],
         ),

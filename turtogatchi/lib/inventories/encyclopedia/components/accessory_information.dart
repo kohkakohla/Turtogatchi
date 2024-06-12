@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:turtogatchi/home.dart';
-import 'package:turtogatchi/inventory/components/footer.dart';
+import 'package:turtogatchi/inventories/components/footer.dart';
 
 class AccessoryInformationPage extends StatefulWidget {
   final String id;
@@ -160,44 +160,6 @@ class _AccessoryInformationPageState extends State<AccessoryInformationPage> {
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            // TODO MAKE THIS BUTTON NICE
-            ElevatedButton(
-              style: ButtonStyle(
-                fixedSize: WidgetStateProperty.all<Size>(const Size(250, 50)),
-                backgroundColor: WidgetStateProperty.all<Color>(
-                  Colors.white,
-                ),
-                elevation: WidgetStateProperty.all<double>(8.0),
-                shape: WidgetStateProperty.all<OutlinedBorder>(
-                  const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                  updateAccessoryBackend(id);
-                });
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    "Switch Accessory",
-                    style: GoogleFonts.pressStart2p(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const Icon(Icons.sync),
                 ],
               ),
             ),

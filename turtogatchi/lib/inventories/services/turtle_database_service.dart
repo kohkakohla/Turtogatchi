@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:turtogatchi/inventory/components/card.dart';
+import 'package:turtogatchi/inventories/components/card.dart';
 
 const String TURTLE_COLLECTION_REF = 'Turtle';
 
