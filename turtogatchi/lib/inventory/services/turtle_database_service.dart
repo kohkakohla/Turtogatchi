@@ -3,12 +3,12 @@ import 'package:turtogatchi/inventory/components/card.dart';
 
 const String TURTLE_COLLECTION_REF = 'Turtle';
 
-class DatabaseService {
+class TurtleDatabaseService {
   final _firestore = FirebaseFirestore.instance;
 
   late final CollectionReference _turtleCollection;
 
-  DatabaseService() {
+  TurtleDatabaseService() {
     _turtleCollection =
         _firestore.collection(TURTLE_COLLECTION_REF).withConverter<CardTurt>(
               fromFirestore: (snapshots, _) => CardTurt.fromJson(
@@ -18,7 +18,7 @@ class DatabaseService {
             );
   }
 
-  Stream<QuerySnapshot> getCards() {
+  Stream<QuerySnapshot> getTurtleCards() {
     return _turtleCollection.snapshots();
   }
 }
