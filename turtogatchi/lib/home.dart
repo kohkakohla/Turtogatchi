@@ -156,7 +156,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       player.open(
         Audio("assets/audio/test.mp3"),
         showNotification: true,
-        autoStart: true,
       );
       await player.setLoopMode(LoopMode.single);
       await player.play();

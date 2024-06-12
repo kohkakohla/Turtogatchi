@@ -34,6 +34,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   var accessoryResult;
   // place holder variables
   var wormCount = 0;
+  var wormGain = 1;
   var local_img = "unknownTurtle.png";
   var turtleName = "Unknown Turtle";
   var accessoryName = "Unknown Accessory";
@@ -55,6 +56,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.removeListener(() {});
+    _controller.dispose();
     player.dispose();
     super.dispose();
   }
@@ -90,85 +92,6 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         .collection('users')
         .doc(user?.uid)
         .update({'wormCount': wormCount});
-  }
-
-  void _outputDecider() {
-    // Randomly decide the output of the gacha
-    var rng = new Random();
-    var output = rng.nextInt(100);
-
-    // 20% chance of getting a turtle
-    if (output < 20) {
-      setState(() {
-        animationAsset = "assets/itemPulled.json";
-
-        // current turtles are only 4....
-        gatchaResult = 1;
-        turtleResult = rng.nextInt(4) + 1;
-      });
-    } else if (output < 70 && output >= 20) {
-      // 50% chance of getting an a feed
-      setState(() {
-        animationAsset = "assets/itemPulled.json";
-        gatchaResult = 2;
-      });
-    } else {
-      setState(() {
-        animationAsset = "assets/itemPulled.json";
-        gatchaResult = 0;
-        // current accessory are only 3....
-        accessoryResult = rng.nextInt(3) + 1;
-      });
-    }
-  }
-
-  void _beginSpin() {
-    // update coins in firestore'
-    if (coins < 5) {
-      print("Not enough coins to spin!");
-      setState(() {});
-    } else {
-      setState(() {
-        _showButton = false;
-        coins -= 5;
-        updateCoinsBackend();
-
-        _initAudioPlayer();
-        print("Spinning the gacha!");
-        _outputDecider();
-
-        _controller.addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            setState(() {
-              _showFirstAnimation = false;
-              animationAsset = "assets/itemPulled.json";
-            });
-            if (gatchaResult == 0) {
-              accessoryNameSetState(accessoryResult);
-            } else if (gatchaResult == 1) {
-              turtleNameSetState(turtleResult);
-            } else if (gatchaResult == 2) {
-              wormCount += 1;
-              _updateWorms();
-            }
-          }
-        });
-      });
-    }
-  }
-
-  Future<void> _initAudioPlayer() async {
-    print("Loading drum audio assets");
-    player.open(
-      Audio("assets/audio/drums.mp3"),
-      showNotification: true,
-      autoStart: true,
-    );
-    await player.play();
-
-    // await player.pause();
-    // await player.stop();
-    // Cancel the subscription after getting the current state to avoid memory leaks
   }
 
   Future<void> _updateInventory(String id) async {
@@ -221,6 +144,117 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
       // update firebase with new turtle in inventory
       //_updateInventory('T0$id');
     }
+  }
+
+  void _outputDecider() {
+    // Randomly decide the output of the gacha
+    var rng = new Random();
+    var output = rng.nextInt(100);
+    if (mounted) {
+      // 20% chance of getting a turtle
+      if (output < 20) {
+        setState(() {
+          animationAsset = "assets/itemPulled.json";
+
+          // current turtles are only 4....
+          gatchaResult = 1;
+          turtleResult = rng.nextInt(4) + 1;
+        });
+        turtleNameSetState(turtleResult);
+      } else if (output < 70 && output >= 20) {
+        // setState(() {
+        //   animationAsset = "assets/itemPulled.json";
+        //   gatchaResult = 2;
+        //   var wormOutput = rng.nextInt(100);
+        //   if (wormOutput <= 66) {
+        //     wormGain = 1;
+        //   } else if (wormOutput > 66 && wormOutput <= 90) {
+        //     wormGain = 2;
+        //   } else {
+        //     wormGain = 5;
+        //   }
+        //   wormCount += wormGain;
+        //   _updateWorms();
+        // });
+        Future.delayed(Duration(seconds: 2), () {
+          // 50% chance of getting an a feed
+          setState(() {
+            animationAsset = "assets/itemPulled.json";
+            gatchaResult = 2;
+            var wormOutput = rng.nextInt(100);
+            if (wormOutput <= 66) {
+              wormGain = 1;
+            } else if (wormOutput > 66 && wormOutput <= 90) {
+              wormGain = 2;
+            } else {
+              wormGain = 5;
+            }
+            wormCount += wormGain;
+            _updateWorms();
+          });
+        });
+      } else {
+        setState(() {
+          animationAsset = "assets/itemPulled.json";
+          gatchaResult = 0;
+          // current accessory are only 3....
+          accessoryResult = rng.nextInt(3) + 1;
+        });
+        accessoryNameSetState(accessoryResult);
+      }
+    }
+  }
+
+  void _beginSpin() {
+    // update coins in firestore'
+    if (coins < 5) {
+      print("Not enough coins to spin!");
+      setState(() {});
+    } else {
+      setState(() {
+        _showButton = false;
+        coins -= 5;
+        updateCoinsBackend();
+
+        _initAudioPlayer();
+        print("Spinning the gacha!");
+        _outputDecider();
+        if (mounted) {
+          _controller.addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              setState(() {
+                _showFirstAnimation = false;
+                animationAsset = "assets/itemPulled.json";
+              });
+
+              // if (gatchaResult == 0) {
+              //   accessoryNameSetState(accessoryResult);
+              // } else if (gatchaResult == 1) {
+              //   turtleNameSetState(turtleResult);
+              // } else if (gatchaResult == 2) {
+              //   print("updating worms now");
+
+              //   print("worm count after db update: $wormCount");
+              // }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  Future<void> _initAudioPlayer() async {
+    if (mounted) {
+      player.open(
+        Audio("assets/audio/drums.mp3"),
+        showNotification: true,
+      );
+      await player.play();
+    }
+
+    // await player.pause();
+    // await player.stop();
+    // Cancel the subscription after getting the current state to avoid memory leaks
   }
 
   void _resetState() {
@@ -463,13 +497,15 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                                                     fit: BoxFit.contain,
                                                   ),
                                                   Text(
-                                                    "Wormy Worm!",
+                                                    wormGain > 1
+                                                        ? "$wormGain Wormy Worms!"
+                                                        : "Wormy Worm!",
                                                     style: GoogleFonts
                                                         .pressStart2p(
                                                       textStyle:
                                                           const TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 18,
+                                                        fontSize: 16,
                                                       ),
                                                     ),
                                                   )
