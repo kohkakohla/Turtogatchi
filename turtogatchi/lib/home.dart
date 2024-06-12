@@ -12,6 +12,7 @@ import 'package:turtogatchi/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/earn_coin_popup.dart';
 import 'package:turtogatchi/popups/museum_popup.dart';
 import 'package:turtogatchi/popups/settings_popup.dart';
+import 'package:cron/cron.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,11 +26,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   StreamSubscription<DocumentSnapshot>? _turtleDataSubscription;
-
+  var cron = Cron();
   var coins = 0;
   var inventory = [];
   var turtleSkin = "T01";
   var hunger = 0;
+  var _timeToPoop = false;
   var _wormAnimation = false;
   late AnimationController _controller;
 
@@ -46,6 +48,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _initAudioPlayer();
     _getUserData();
     _getTurtleData();
+    _scheduledPoop();
     _controller = AnimationController(vsync: this);
 
     _controller.addStatusListener((status) {
@@ -63,6 +66,22 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> _scheduledPoop() async {
+    print("time to poop hehe");
+    cron.schedule(Schedule.parse('*/1 * * * *'), () async {
+      setState(() {
+        _timeToPoop = true;
+      });
+      print("time to poop hehe");
+    });
+  }
+
+  void _cleanTurtle() {
+    setState(() {
+      _timeToPoop = false;
+    });
+  }
+
   Future<void> _getUserData() async {
     if (user != null) {
       _userDataSubscription = FirebaseFirestore.instance
@@ -76,8 +95,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             inventory = snapshot.data()?['inventory'] ?? [];
           });
         }
-        print("Coins: $coins");
-        print("Inventory: $inventory");
       }, onError: (error) {
         // Handle any errors
         print("Error listening to user data changes: $error");
