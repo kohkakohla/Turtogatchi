@@ -31,7 +31,7 @@ class HomePageState extends State<HomePage>
   var coins = 0;
   var inventory = [];
   var turtleSkin = "T01";
-  var hunger = 0;
+  double hunger = 5;
   var _isDirty = false;
   var _wormAnimation = false;
   var _cleaningAnimation = false;
@@ -125,13 +125,29 @@ class HomePageState extends State<HomePage>
   Future<void> _scheduledPoop() async {
     cron.schedule(Schedule.parse('*/1 * * * *'), () async {
       setState(() {
-        _isDirty = true;
+        if (!_isDirty) {
+          _isDirty = true;
+        }
+
+        if (hunger > 0) {
+          hunger -= 0.5;
+        }
+        print("hunger: $hunger");
+        _updateHunger();
       });
     });
   }
 
+  void _updateHunger() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .collection('turtleState')
+        .doc('turtle')
+        .update({'hunger': hunger});
+  }
+
   void _cleanTurtle() {
-    print("cleaning turtle poop");
     setState(() {
       _isDirty = false;
       _cleaningAnimation = true;
@@ -170,7 +186,7 @@ class HomePageState extends State<HomePage>
         if (snapshot.exists) {
           setState(() {
             turtleSkin = snapshot.data()?['current'] ?? 'T01';
-            hunger = snapshot.data()?['hunger'] ?? 5;
+            hunger = snapshot.data()?['hunger'] ?? 5.0;
           });
         }
       }, onError: (error) {
@@ -193,7 +209,7 @@ class HomePageState extends State<HomePage>
         .get();
     if (hatData.exists) {
       final hat = hatData.data()?['accessory'] ?? '';
-      if (hat == '') {
+      if (hat == 'A00') {
         return doc.data()?['local_img'] + ".png" ?? '';
       } else {
         final hatName = await FirebaseFirestore.instance
@@ -340,19 +356,31 @@ class HomePageState extends State<HomePage>
                         } else {
                           String img = snapshot.data!;
                           return Stack(alignment: Alignment.center, children: [
-                            Image.asset("assets/images/turtle/$img"),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              child: Image.asset("assets/images/turtle/$img"),
+                            ),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 275),
+                                child: Image.asset(
+                                    width: 250,
+                                    "assets/images/hunger/$hunger.png")),
                             if (_wormAnimation)
-                              Transform.scale(
-                                  scale: 1.5,
-                                  child: Lottie.asset(
-                                    "assets/eating.json",
-                                    controller: _controller,
-                                    onLoaded: (composition) {
-                                      _controller.duration =
-                                          composition.duration;
-                                      _controller.forward();
-                                    },
-                                  ))
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: Transform.scale(
+                                      scale: 1.5,
+                                      child: Lottie.asset(
+                                        "assets/eating.json",
+                                        controller: _controller,
+                                        onLoaded: (composition) {
+                                          _controller.duration =
+                                              composition.duration;
+                                          _controller.forward();
+                                        },
+                                      )))
                             else if (_isDirty)
                               Transform.scale(
                                   scale: 1.1,
@@ -462,6 +490,8 @@ class HomePageState extends State<HomePage>
                                         //lottie animation to play...
                                         setState(() {
                                           _wormAnimation = true;
+                                          hunger += 1;
+                                          _updateHunger();
                                         });
                                       },
                                       coins: coins,
