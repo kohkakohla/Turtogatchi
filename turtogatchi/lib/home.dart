@@ -116,7 +116,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return doc.data()?['local_img'] ?? '';
   }
 
-  void _initAudioPlayer() async {
+  Future<void> _initAudioPlayer() async {
     try {
       print("Loading audio asset for login page");
       player.open(
@@ -124,9 +124,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         showNotification: true,
         autoStart: true,
       );
-      print("Setting loop mode");
       await player.setLoopMode(LoopMode.single);
-      print("Playing background music");
       await player.play();
     } catch (error) {
       print("An error occurred: $error");
@@ -269,11 +267,14 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                     )),
               ),
-              // TODO THIS IS THE WORM ANIMATION idk how use
-              // SizedBox(
-              //   child: Lottie.asset("assets/images/eating.json"),
-              // ),
-              // BUTTONS
+              
+
+              /*
+                HOME BUTTON INCLUDES
+                1. FEED BUTTON
+                2. EARN BUTTON
+                3. GATCHA BUTTON
+              */
               Padding(
                 padding: const EdgeInsets.only(bottom: 40.0),
                 child: Row(

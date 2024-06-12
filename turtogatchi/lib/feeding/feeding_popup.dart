@@ -21,24 +21,60 @@ class _FeedingPopupState extends State<FeedingPopup> {
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   var turtleSkin = "T01";
   var hunger = 0;
+  var worms = 0;
+  bool _wormsToFeed = false;
+  
 
   @override
   void initState() {
     super.initState();
     _getTurtleData();
+    _getUserWormCount();
   }
 
-  void _updateCoins() async {
-    print('Updating coins in the backend');
-    var coins = widget.coins - 2;
-    print(user?.uid);
+  Future<void> _updateCoins() async {
+    if (worms == 0) {
+      
+      var coins = widget.coins - 2;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user?.uid)
+          .update({'coins': coins});
+    }
+    else {
+      setState(() {
+        worms -= 1;
+        if (worms == 0) {
+          _wormsToFeed = false;
+        } else {
+          _wormsToFeed = true;
+        }
+      }); 
+    }
     await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user?.uid)
-        .update({'coins': coins});
+          .collection('users')
+          .doc(user?.uid)
+          .update({'wormCount': worms});
   }
 
-  void _getTurtleData() async {
+  Future<void> _getUserWormCount() async {
+    if (user != null) {
+      DocumentSnapshot docRef = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      if (docRef.exists) {
+        setState(() {
+          worms = (docRef.data() as Map<String, dynamic>)?['wormCount'];
+          if (worms != 0) {
+            _wormsToFeed = true;
+          }
+        });
+      } 
+    }
+  }
+
+  Future<void> _getTurtleData() async {
     if (user != null) {
       _userDataSubscription = FirebaseFirestore.instance
           .collection('users')
@@ -60,7 +96,7 @@ class _FeedingPopupState extends State<FeedingPopup> {
     }
   }
 
-  void updateHungerBackend(int newHungerLevel) async {
+  Future<void> updateHungerBackend(int newHungerLevel) async {
     if (user != null) {
       if (newHungerLevel >= 0 && newHungerLevel <= 10) {
         FirebaseFirestore.instance
@@ -112,17 +148,20 @@ class _FeedingPopupState extends State<FeedingPopup> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          
           //HEADER
           Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Feed Your Turtle!",
-              style: GoogleFonts.pressStart2p(
-                fontSize: 16,
-                color: Colors.black,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Feed Your Turtle!",
+                  style: GoogleFonts.pressStart2p(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
               ),
-            ),
-          ),
+          
+  
 
           // SUBHEADER
 
@@ -156,7 +195,9 @@ class _FeedingPopupState extends State<FeedingPopup> {
                       widget.onFeedPressed();
                     });
                   },
-                  child: Column(
+                  child: 
+                  _wormsToFeed
+                  ? Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
@@ -167,9 +208,48 @@ class _FeedingPopupState extends State<FeedingPopup> {
                           color: Colors.black,
                         ),
                       ),
-                      Image.asset("assets/images/worm.png"),
+                      Text(
+                          worms.toString() + " Worms",
+                          style: GoogleFonts.pressStart2p(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Image.asset("assets/images/worm.png"),
                     ],
-                  ),
+                  )
+                  : Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "FEED",
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                        Text(
+                          "2 coins",
+                          style: GoogleFonts.pressStart2p(
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Image.asset("assets/images/home/coin.png",
+                        width: 20,
+                        height: 20,
+                        ),
+                        ],
+                        ),
+                        Image.asset("assets/images/worm.png"),
+                    ],
+                  )
                 ),
               ),
             ],
