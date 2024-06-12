@@ -252,6 +252,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               // TURTLE TODO GET FROM DB THE TURTLE.
               Expanded(
+                flex: 8,
                 child: Align(
                     alignment: Alignment.center,
                     child: FutureBuilder<String>(
@@ -284,6 +285,21 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                     )),
               ),
+              Expanded(
+                  flex: 2,
+                  child: 
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Transform.scale(
+                        scale: 1, // Adjust the scale to make the IconButton smaller
+                        child: IconButton(
+                          iconSize: 10, // You can adjust this size if needed
+                          icon: Image.asset("assets/images/broom.png"),
+                          onPressed: () {
+                            print("Cleaning turtle now bitches");
+                          },
+                        ),
+                      ))),
               
 
               /*

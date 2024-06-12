@@ -313,7 +313,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                                   child: Text(
                                     _enoughCoins
                                         ? '5 Coins to spin!'
-                                        : 'Not enough coins',
+                                        : 'Need 5 coins to spin',
                                     style: GoogleFonts.pressStart2p(
                                       textStyle: const TextStyle(
                                         color: Colors.black,
