@@ -84,7 +84,7 @@ class AccessoryEncyclopediaPageState extends State<AccessoryEncyclopediaPage> {
               ),
 
               // FOOTER
-              const Footer()
+              //const Footer()
             ],
           ),
         ),
