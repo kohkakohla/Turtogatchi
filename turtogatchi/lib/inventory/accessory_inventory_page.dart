@@ -17,7 +17,7 @@ class _AccessoryInventoryPageState extends State<AccessoryInventoryPage> {
   final AccessoryDatabaseService _databaseService = AccessoryDatabaseService();
   final user = FirebaseAuth.instance.currentUser;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
-  var accessory = ["A01"];
+  var accessory = [];
 
   Stream<QuerySnapshot> getAccessoryCards() {
     return FirebaseFirestore.instance.collection(" Accessory").snapshots();
@@ -38,9 +38,9 @@ class _AccessoryInventoryPageState extends State<AccessoryInventoryPage> {
           .listen((snapshot) {
         if (snapshot.exists) {
           setState(() {
-            accessory = (snapshot.data()?['accessory'] as List<dynamic>)
+            accessory = (snapshot.data()?['inventory'] as List<dynamic>)
                     .cast<String>() ??
-                ["A01"];
+                [];
           });
         }
       }, onError: (error) {

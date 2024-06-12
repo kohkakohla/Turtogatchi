@@ -100,7 +100,7 @@ class _TurtleInformationSwitchablePageState
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Image.asset(
-                      "assets/images/local_img/${widget.img}",
+                      "assets/images/local_img/${widget.img}.png",
                     ),
                   ),
 
