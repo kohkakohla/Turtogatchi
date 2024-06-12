@@ -133,37 +133,7 @@ class _InventoryPageState extends State<InventoryPage> {
                                                 card.conservationText,
                                             vulnerable: card.vulnerable,
                                           );
-                                        } else {
-                                          return Card.outlined(
-                                              elevation: 4,
-                                              color: const Color.fromRGBO(
-                                                  152, 228, 255, 1.0),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                side: const BorderSide(
-                                                  color: Color.fromRGBO(
-                                                      78, 152, 180, 1.0),
-                                                  width: 2,
-                                                ),
-                                              ),
-                                              child: SizedBox(
-                                                width: 100,
-                                                height: 100,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      "assets/images/turtle/unknownTurtle.png",
-                                                      width: 100,
-                                                      height: 75,
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ));
-                                        }
+                                        } 
                                       } else {
                                         return const SizedBox.shrink();
                                       }
