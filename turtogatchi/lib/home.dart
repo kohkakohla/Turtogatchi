@@ -303,27 +303,36 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           return Stack(alignment: Alignment.center, children: [
                             Image.asset("assets/images/turtle/$img"),
                             if (_wormAnimation)
-                              Lottie.asset(
-                                "assets/eating.json",
-                                controller: _controller,
-                                onLoaded: (composition) {
-                                  _controller.duration = composition.duration;
-                                  _controller.forward();
-                                },
-                              )
+                              Transform.scale(
+                                  scale: 1.5,
+                                  child: Lottie.asset(
+                                    "assets/eating.json",
+                                    controller: _controller,
+                                    onLoaded: (composition) {
+                                      _controller.duration =
+                                          composition.duration;
+                                      _controller.forward();
+                                    },
+                                  ))
                             else if (_isDirty)
-                              Image.asset("assets/images/poop.png")
+                              Transform.scale(
+                                  scale: 1,
+                                  child: Image.asset("assets/images/poop.png"))
+                            //Image.asset("assets/images/poop.png")
                             else if (_cleaningAnimation)
-                              Lottie.asset(
-                                "assets/clean.json",
-                                controller: _controllerClean,
-                                onLoaded: (composition) {
-                                  _controllerClean.duration =
-                                      composition.duration;
-                                  _controllerClean.forward();
-                                },
-                              )
-                            // do smth
+                              Transform.scale(
+                                  scale: 1.5,
+                                  child: Lottie.asset(
+                                    "assets/clean.json",
+                                    controller: _controllerClean,
+                                    onLoaded: (composition) {
+                                      _controllerClean.duration =
+                                          composition.duration;
+                                      _controllerClean.forward();
+                                    },
+                                  )
+                                  // do smth
+                                  )
                           ] // turtle sprite render
                               );
                         }
