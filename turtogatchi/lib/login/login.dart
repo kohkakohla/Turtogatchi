@@ -162,7 +162,7 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 36, 0, 0),
+                    padding: EdgeInsets.fromLTRB(0, 128, 0, 0),
                     child:
 
                         // Login box container

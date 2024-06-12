@@ -63,7 +63,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  void _getUserData() async {
+  Future<void> _getUserData() async {
     if (user != null) {
       _userDataSubscription = FirebaseFirestore.instance
           .collection('users')
@@ -85,7 +85,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
-  void _getTurtleData() async {
+  Future<void> _getTurtleData() async {
     if (user != null) {
       _turtleDataSubscription = FirebaseFirestore.instance
           .collection('users')
@@ -164,8 +164,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
           //APPBAR
           appBar: AppBar(
+            
             backgroundColor: Colors.transparent,
-            elevation: 0, // Make AppBar transparent
+            elevation: 0, 
+            automaticallyImplyLeading: false,// Make AppBar transparent
             title: const Text(
               "My Farm",
               style: TextStyle(fontFamily: "MarioRegular", fontSize: 18),

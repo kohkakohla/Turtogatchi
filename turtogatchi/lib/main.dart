@@ -35,7 +35,7 @@ void main() async {
   await MobileAds.instance.initialize();
 
   // Sign out the user when launching for TESTing purposes
-  await FirebaseAuth.instance.signOut();
+  //await FirebaseAuth.instance.signOut();
 }
 
 class MyApp extends StatelessWidget {
