@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +29,48 @@ class AccessoryInformationSwitchablePage extends StatefulWidget {
 class _AccessoryInformationSwitchablePageState
     extends State<AccessoryInformationSwitchablePage> {
   final user = FirebaseAuth.instance.currentUser;
+  StreamSubscription<DocumentSnapshot>? _turtleDataSubscription;
   String get id => widget.id;
+  String accessory = "A00";
 
-  void updateAccessoryBackend(String turtleSkin) async {
+  @override
+  void initState() {
+    super.initState();
+    _getTurtleData();
+  }
+
+  @override
+  void dispose() {
+    _turtleDataSubscription
+        ?.cancel(); // Cancel the subscription when the widget is disposed
+    super.dispose();
+  }
+
+  Future<void> _getTurtleData() async {
+    if (user != null) {
+      _turtleDataSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .collection('turtleState')
+          .doc('turtle')
+          .snapshots()
+          .listen((snapshot) {
+        if (snapshot.exists) {
+          if (mounted) {
+            // Check if the widget is still in the tree
+            setState(() {
+              accessory = snapshot.data()?['accessory'] ?? "A00";
+            });
+          }
+        }
+      }, onError: (error) {
+        // Handle any errors
+        ///print("Error listening to user data changes: $error");
+      }) as StreamSubscription<DocumentSnapshot<Object?>>?;
+    }
+  }
+
+  void updateAccessoryBackend(String id) async {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(user?.uid)
@@ -180,7 +221,13 @@ class _AccessoryInformationSwitchablePageState
               ),
               onPressed: () {
                 setState(() {
-                  updateAccessoryBackend(id);
+                  print(accessory);
+                  print(id);
+                  if (accessory == id && accessory != "A00") {
+                    updateAccessoryBackend("A00");
+                  } else {
+                    updateAccessoryBackend(id);
+                  }
                 });
                 Navigator.pop(context);
                 Navigator.pop(context);
@@ -192,14 +239,24 @@ class _AccessoryInformationSwitchablePageState
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    "Switch Accessory",
-                    style: GoogleFonts.pressStart2p(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                  if (accessory == id && accessory != "A00")
+                    Text(
+                      "Remove Accessory",
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    )
+                  else
+                    Text(
+                      "Switch Accessory",
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
                   const Icon(Icons.sync),
                 ],
               ),
