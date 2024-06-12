@@ -290,7 +290,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
             elevation: 0, // Make AppBar transparent
             title: const Text(
               "Gacha",
-              style: TextStyle(fontFamily: "MarioRegular", fontSize: 18),
+              style: TextStyle(fontFamily: "MarioRegular", fontSize: 16),
             ),
             actions: <Widget>[
               // Inventory button
@@ -333,7 +333,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                     ),
                   ),
                   Image.asset(
-                      height: 35, width: 35, "assets/images/home/coin.png"),
+                      height: 30, width: 30, "assets/images/home/coin.png"),
                   Text(
                     //worm
                     wormCount.toString(),
