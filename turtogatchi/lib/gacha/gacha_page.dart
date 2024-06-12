@@ -249,6 +249,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         Audio("assets/audio/drums.mp3"),
         showNotification: true,
       );
+      print("I am playing!!!");
       await player.play();
     }
 

@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  final AssetsAudioPlayer player = AssetsAudioPlayer();
+  late AssetsAudioPlayer player;
   final user = FirebaseAuth.instance.currentUser;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   StreamSubscription<DocumentSnapshot>? _turtleDataSubscription;
@@ -41,18 +41,21 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void dispose() {
     player.dispose();
     _controller.dispose();
+    _controllerClean.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _initAudioPlayer();
+    //_initAudioPlayer();
     _getUserData();
     _getTurtleData();
     _scheduledPoop();
     _controller = AnimationController(vsync: this);
     _controllerClean = AnimationController(vsync: this);
+    //WidgetsBinding.instance.addObserver(this);
+    _loadMusic();
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -82,6 +85,41 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       }
     });
   }
+
+  void _loadMusic() async {
+    player = AssetsAudioPlayer();
+    await player.open(Audio("assets/audio/test.mp3"));
+    await player.setLoopMode(LoopMode.single);
+    await player.play();
+  }
+
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   super.didChangeAppLifecycleState(state);
+  //   switch (state) {
+  //     case AppLifecycleState.resumed:
+  //       // App is in the foreground
+  //       // Resume music if needed
+  //       print("loading back up the home audio");
+  //       _initAudioPlayer();
+  //     case AppLifecycleState.paused:
+  //       // App is in the background
+  //       print("stopping audio player paused");
+  //       _stopMusic();
+  //     case AppLifecycleState.inactive:
+  //       // App is in an inactive state and is not receiving user input
+  //       print("stopping audio player");
+  //       _stopMusic();
+  //     case AppLifecycleState.detached:
+  //       print("stopping audio player detached");
+  //       // App is still hosted on a flutter engine but is detached from any host views
+  //       _stopMusic();
+  //     case AppLifecycleState.hidden:
+  //       print("stopping audio player hidden");
+  //       // TODO: Handle this case.
+  //       _stopMusic();
+  //   }
+  // }
 
   Future<void> _scheduledPoop() async {
     cron.schedule(Schedule.parse('*/1 * * * *'), () async {
@@ -170,26 +208,26 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Future<void> _initAudioPlayer() async {
     try {
       print("Loading audio asset for login page");
-      player.open(
-        Audio("assets/audio/test.mp3"),
-        showNotification: true,
-      );
-      await player.setLoopMode(LoopMode.single);
-      await player.play();
+      if (!player.isPlaying.value) {
+        player.open(
+          Audio("assets/audio/test.mp3"),
+          showNotification: true,
+        );
+        await player.setLoopMode(LoopMode.single);
+        await player.play();
+      }
     } catch (error) {
       print("An error occurred: $error");
       // Consider handling the error more gracefully, e.g., showing a user-friendly message.
     }
   }
 
-  void resetAudio() async {
-    await player.stop();
+  void _resumeMusic() async {
     await player.play();
   }
 
   void _stopMusic() async {
-    print("stopping audio player");
-    await player.stop();
+    await player.pause();
   }
 
   // grab
@@ -316,12 +354,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ))
                             else if (_isDirty)
                               Transform.scale(
-                                  scale: 1,
+                                  scale: 1.1,
                                   child: Image.asset("assets/images/poop.png"))
                             //Image.asset("assets/images/poop.png")
                             else if (_cleaningAnimation)
                               Transform.scale(
-                                  scale: 1.5,
+                                  scale: 1.1,
                                   child: Lottie.asset(
                                     "assets/clean.json",
                                     controller: _controllerClean,
@@ -505,11 +543,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 shadowColor: Colors.transparent,
                               ),
                               onPressed: () {
-                                player.stop();
+                                _stopMusic();
                                 Navigator.pushNamed(
                                   context,
                                   '/gacha',
-                                );
+                                ).then((_) {
+                                  _resumeMusic();
+                                });
                               },
                               child: Column(
                                 children: [
