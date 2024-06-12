@@ -273,7 +273,7 @@ class HomePageState extends State<HomePage>
   }
 
   void _stopMusic() async {
-    await player.pause();
+    await player.dispose();
   }
 
   // grab
@@ -537,7 +537,11 @@ class HomePageState extends State<HomePage>
                                         //lottie animation to play...
                                         setState(() {
                                           _wormAnimation = true;
+
                                           hunger += 1;
+                                          if (hunger > 10) {
+                                            hunger = 10;
+                                          }
                                           _updateHunger();
                                           _playEatingSound();
                                         });
