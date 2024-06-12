@@ -105,6 +105,9 @@ class HomePageState extends State<HomePage>
     await player.setLoopMode(LoopMode.single);
     await player.play();
     player.setVolume(0.5);
+    player2.setVolume(1);
+    player3.setVolume(1);
+    player4.setVolume(1);
   }
 
   @override
