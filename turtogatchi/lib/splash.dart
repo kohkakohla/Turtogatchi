@@ -11,20 +11,60 @@ class SplashScreen extends StatefulWidget {
   SplashScreenState createState() => SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends State<SplashScreen>
+    with WidgetsBindingObserver {
   final AssetsAudioPlayer player = AssetsAudioPlayer();
+  bool _left = false;
 
   @override
   void dispose() {
     player.stop();
     player.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initAudioPlayer();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // App is in the foreground
+        // Resume music if needed
+        print("loading back up the home audio");
+        _resumeMusic();
+        break;
+      case AppLifecycleState.paused:
+        // App is in the background
+        print("stopping audio player paused");
+        if (!_left) {
+          _stopAudioPlayer();
+        }
+
+        break;
+      case AppLifecycleState.inactive:
+        // App is in an inactive state and is not receiving user input
+        print("stopping audio player");
+        _stopAudioPlayer();
+        break;
+      case AppLifecycleState.detached:
+        print("stopping audio player detached");
+        // App is still hosted on a flutter engine but is detached from any host views
+        _stopAudioPlayer();
+        break;
+      case AppLifecycleState.hidden:
+        print("stopping audio player hidden");
+        // TODO: Handle this case.
+        _stopAudioPlayer();
+        break;
+    }
   }
 
   void _initAudioPlayer() async {
@@ -44,8 +84,18 @@ class SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  void _resumeMusic() async {
+    await player.play();
+  }
+
   void _stopAudioPlayer() async {
+    await player.pause();
+  }
+
+  void _killAudio() async {
+    _left = true;
     await player.stop();
+    await player.dispose();
   }
 
   @override
@@ -94,7 +144,7 @@ class SplashScreenState extends State<SplashScreen> {
                         ),
                       ),
                       onPressed: () {
-                        _stopAudioPlayer();
+                        _killAudio();
                         Navigator.pushNamed(context, '/login');
                       },
                       child: const Padding(

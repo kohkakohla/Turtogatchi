@@ -21,7 +21,8 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class HomePageState extends State<HomePage>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late AssetsAudioPlayer player;
   final user = FirebaseAuth.instance.currentUser;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
@@ -54,7 +55,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _scheduledPoop();
     _controller = AnimationController(vsync: this);
     _controllerClean = AnimationController(vsync: this);
-    //WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _loadMusic();
 
     _controller.addStatusListener((status) {
@@ -93,33 +94,33 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     await player.play();
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   super.didChangeAppLifecycleState(state);
-  //   switch (state) {
-  //     case AppLifecycleState.resumed:
-  //       // App is in the foreground
-  //       // Resume music if needed
-  //       print("loading back up the home audio");
-  //       _initAudioPlayer();
-  //     case AppLifecycleState.paused:
-  //       // App is in the background
-  //       print("stopping audio player paused");
-  //       _stopMusic();
-  //     case AppLifecycleState.inactive:
-  //       // App is in an inactive state and is not receiving user input
-  //       print("stopping audio player");
-  //       _stopMusic();
-  //     case AppLifecycleState.detached:
-  //       print("stopping audio player detached");
-  //       // App is still hosted on a flutter engine but is detached from any host views
-  //       _stopMusic();
-  //     case AppLifecycleState.hidden:
-  //       print("stopping audio player hidden");
-  //       // TODO: Handle this case.
-  //       _stopMusic();
-  //   }
-  // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // App is in the foreground
+        // Resume music if needed
+        print("loading back up the home audio");
+        _resumeMusic();
+      case AppLifecycleState.paused:
+        // App is in the background
+        print("stopping audio player paused");
+        _stopMusic();
+      case AppLifecycleState.inactive:
+        // App is in an inactive state and is not receiving user input
+        print("stopping audio player");
+        _stopMusic();
+      case AppLifecycleState.detached:
+        print("stopping audio player detached");
+        // App is still hosted on a flutter engine but is detached from any host views
+        _stopMusic();
+      case AppLifecycleState.hidden:
+        print("stopping audio player hidden");
+        // TODO: Handle this case.
+        _stopMusic();
+    }
+  }
 
   Future<void> _scheduledPoop() async {
     cron.schedule(Schedule.parse('*/1 * * * *'), () async {
