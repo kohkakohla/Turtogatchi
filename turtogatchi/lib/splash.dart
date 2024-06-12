@@ -119,7 +119,7 @@ class SplashScreenState extends State<SplashScreen>
               children: [
                 // MAIN TITLE TEXT AND LOGO
                 const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.fromLTRB(0, 60, 0, 0),
                   child: Text(
                     "TURTOGOTCHI",
                     style: TextStyle(fontFamily: "MarioRegular", fontSize: 28),
@@ -133,7 +133,7 @@ class SplashScreenState extends State<SplashScreen>
 
                 // START
                 Padding(
-                  padding: const EdgeInsets.only(top: 180),
+                  padding: const EdgeInsets.only(top: 120),
                   child: Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(

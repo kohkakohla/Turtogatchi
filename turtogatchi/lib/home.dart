@@ -25,6 +25,8 @@ class HomePageState extends State<HomePage>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late AssetsAudioPlayer player;
   late AssetsAudioPlayer player2;
+  late AssetsAudioPlayer player3;
+  late AssetsAudioPlayer player4;
   final user = FirebaseAuth.instance.currentUser;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   StreamSubscription<DocumentSnapshot>? _turtleDataSubscription;
@@ -44,6 +46,8 @@ class HomePageState extends State<HomePage>
   void dispose() {
     player.dispose();
     player2.dispose();
+    player3.dispose();
+    player4.dispose();
     _controller.dispose();
     _controllerClean.dispose();
     _userDataSubscription?.cancel();
@@ -94,9 +98,13 @@ class HomePageState extends State<HomePage>
 
   void _loadMusic() async {
     player = AssetsAudioPlayer();
+    player2 = AssetsAudioPlayer();
+    player3 = AssetsAudioPlayer();
+    player4 = AssetsAudioPlayer();
     await player.open(Audio("assets/audio/test.mp3"));
     await player.setLoopMode(LoopMode.single);
     await player.play();
+    player.setVolume(0.5);
   }
 
   @override
@@ -132,15 +140,20 @@ class HomePageState extends State<HomePage>
       setState(() {
         if (!_isDirty) {
           _isDirty = true;
+          _playPlopSound();
         }
 
         if (hunger > 0) {
           hunger -= 0.5;
         }
-        print("hunger: $hunger");
         _updateHunger();
       });
     });
+  }
+
+  Future<void> _playPlopSound() async {
+    await player2.open(Audio("assets/audio/plop.mp3"));
+    await player2.play();
   }
 
   void _updateHunger() async {
@@ -152,7 +165,14 @@ class HomePageState extends State<HomePage>
         .update({'hunger': hunger});
   }
 
-  void _cleanTurtle() {
+  void _playEatingSound() async {
+    await player4.open(Audio("assets/audio/eating.mp3"));
+    await player4.play();
+  }
+
+  void _cleanTurtle() async {
+    await player3.open(Audio("assets/audio/sweep.mp3"));
+    await player3.play();
     setState(() {
       _isDirty = false;
       _cleaningAnimation = true;
@@ -228,22 +248,22 @@ class HomePageState extends State<HomePage>
     return doc.data()?['local_img'] ?? '';
   }
 
-  Future<void> _initAudioPlayer() async {
-    try {
-      print("Loading audio asset for login page");
-      if (!player.isPlaying.value) {
-        player.open(
-          Audio("assets/audio/test.mp3"),
-          showNotification: true,
-        );
-        await player.setLoopMode(LoopMode.single);
-        await player.play();
-      }
-    } catch (error) {
-      print("An error occurred: $error");
-      // Consider handling the error more gracefully, e.g., showing a user-friendly message.
-    }
-  }
+  // Future<void> _initAudioPlayer() async {
+  //   try {
+  //     print("Loading audio asset for login page");
+  //     if (!player.isPlaying.value) {
+  //       player.open(
+  //         Audio("assets/audio/test.mp3"),
+  //         showNotification: true,
+  //       );
+  //       await player.setLoopMode(LoopMode.single);
+  //       await player.play();
+  //     }
+  //   } catch (error) {
+  //     print("An error occurred: $error");
+  //     // Consider handling the error more gracefully, e.g., showing a user-friendly message.
+  //   }
+  // }
 
   void _resumeMusic() async {
     await player.play();
@@ -323,7 +343,7 @@ class HomePageState extends State<HomePage>
           // MAIN BODY
           body: Column(
             children: [
-              Align(
+              const Align(
                 alignment: Alignment.centerRight,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -389,7 +409,7 @@ class HomePageState extends State<HomePage>
                                     const EdgeInsets.fromLTRB(0, 0, 0, 220),
                                 child: Image.asset(
                                     width: 150,
-                                    "assets/images/hunger/$hunger.png")),
+                                    "assets/images/hungerBars/$hunger.png")),
                             if (_wormAnimation)
                               Padding(
                                   padding:
@@ -516,6 +536,7 @@ class HomePageState extends State<HomePage>
                                           _wormAnimation = true;
                                           hunger += 1;
                                           _updateHunger();
+                                          _playEatingSound();
                                         });
                                       },
                                       coins: coins,

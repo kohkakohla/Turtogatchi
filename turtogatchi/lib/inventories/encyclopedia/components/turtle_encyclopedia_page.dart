@@ -90,7 +90,7 @@ class TurtleEncyclopediaPageState extends State<TurtleEncyclopediaPage> {
               ),
 
               // FOOTER
-              const Footer()
+              //const Footer()
             ],
           ),
         ),
