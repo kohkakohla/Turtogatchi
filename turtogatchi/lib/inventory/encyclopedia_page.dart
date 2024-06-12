@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:turtogatchi/inventory/components/card.dart';
 import 'package:turtogatchi/inventory/components/turtle_card.dart';
-import 'package:turtogatchi/inventory/services/database_service.dart';
+import 'package:turtogatchi/inventory/services/turtle_database_service.dart';
 
 import 'components/footer.dart';
 
@@ -14,7 +14,7 @@ class EncyclopediaPage extends StatefulWidget {
 }
 
 class EncyclopediaPageState extends State<EncyclopediaPage> {
-  final DatabaseService _databaseService = DatabaseService();
+  final TurtleDatabaseService _databaseService = TurtleDatabaseService();
   final user = FirebaseAuth.instance.currentUser;
 
   @override
@@ -100,7 +100,7 @@ class EncyclopediaPageState extends State<EncyclopediaPage> {
                                 ),
                               );
                             },
-                            stream: _databaseService.getCards(),
+                            stream: _databaseService.getTurtleCards(),
                           )
                         ],
                       ),
