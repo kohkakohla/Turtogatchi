@@ -182,10 +182,12 @@ class _AccessoryInformationSwitchablePageState
                 setState(() {
                   updateAccessoryBackend(id);
                 });
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
+                Navigator.pop(context);
+                Navigator.pop(context);
+                // Navigator.push(
+                //   context,
+                //   //MaterialPageRoute(builder: (context) => const HomePage()),
+                // );
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
