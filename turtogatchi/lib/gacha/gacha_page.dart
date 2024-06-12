@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -17,17 +18,24 @@ class GachaPage extends StatefulWidget {
 }
 
 class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
-  bool _showButton = true;
-  bool _isAnimationActive = false;
-  bool _enoughCoins = false;
   final user = FirebaseAuth.instance.currentUser;
+  // user variables
   var coins = 0;
   var inventory = [];
-  var animationAsset = "assets/accessory.json";
+  bool _enoughCoins = false;
+  // animation related variables
+  var animationAsset = "assets/itemPulled.json";
   var _showFirstAnimation = true;
+  bool _showButton = true;
+  // Gatcha variables
   var gatchaResult;
+  var turtleResult;
+  var accessoryResult;
+  // place holder variables
+  var wormCount = 0;
   var local_img = "unknownTurtle.png";
   var turtleName = "Unknown Turtle";
+  var accessoryName = "Unknown Accessory";
 
   late AnimationController _controller;
   late AnimationController _controllerTwo;
@@ -57,8 +65,9 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         .get();
     if (userData.exists) {
       setState(() {
-        coins = (userData.data() as Map<String, dynamic>)?['coins'];
-        inventory = (userData.data() as Map<String, dynamic>)?['inventory'];
+        wormCount = (userData.data() as Map<String, dynamic>)['wormCount'];
+        coins = (userData.data() as Map<String, dynamic>)['coins'];
+        inventory = (userData.data() as Map<String, dynamic>)['inventory'];
         if (coins >= 5) {
           _enoughCoins = true;
         }
@@ -75,6 +84,20 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         .update({'coins': coins});
   }
 
+  Future<void> _updateWorms() async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .get();
+    if (userDoc.exists) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user?.uid)
+          .update({'wormCount': wormCount});
+    }
+    ;
+  }
+
   void _outputDecider() {
     // Randomly decide the output of the gacha
     var rng = new Random();
@@ -83,14 +106,24 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     // 20% chance of getting a turtle
     if (output < 20) {
       setState(() {
-        animationAsset = "assets/turtle.json";
+        animationAsset = "assets/itemPulled.json";
 
-        gatchaResult = rng.nextInt(4) + 1;
+        // current turtles are only 4....
+        gatchaResult = 1;
+        turtleResult = rng.nextInt(4) + 1;
+      });
+    } else if (output < 70 && output >= 20) {
+      // 50% chance of getting an a feed
+      setState(() {
+        animationAsset = "assets/itemPulled.json";
+        gatchaResult = 2;
       });
     } else {
       setState(() {
-        animationAsset = "assets/accessory.json";
+        animationAsset = "assets/itemPulled.json";
         gatchaResult = 0;
+        // current accessory are only 3....
+        accessoryResult = rng.nextInt(3) + 1;
       });
     }
   }
@@ -103,7 +136,6 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     } else {
       setState(() {
         _showButton = false;
-        _isAnimationActive = true;
         coins -= 5;
         updateCoinsBackend();
 
@@ -113,17 +145,17 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
 
         _controller.addStatusListener((status) {
           if (status == AnimationStatus.completed) {
+            setState(() {
+              _showFirstAnimation = false;
+              animationAsset = "assets/itemPulled.json";
+            });
             if (gatchaResult == 0) {
-              setState(() {
-                _showFirstAnimation = false;
-                animationAsset = "assets/accessory.json";
-              });
-            } else {
+              accessoryNameSetState(accessoryResult);
+            } else if (gatchaResult == 1) {
               turtleNameSetState(gatchaResult);
-              setState(() {
-                _showFirstAnimation = false;
-                animationAsset = "assets/turtle.json";
-              });
+            } else {
+              wormCount += 1;
+              _updateWorms();
             }
           }
         });
@@ -152,7 +184,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
         .doc(user?.uid)
         .get();
     if (userDoc.exists) {
-      inventory = (userDoc.data() as Map<String, dynamic>)?['inventory'];
+      inventory = (userDoc.data() as Map<String, dynamic>)['inventory'];
 
       if (!inventory.contains(id)) {
         inventory.add(id);
@@ -161,8 +193,21 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
             .doc(user?.uid)
             .update({'inventory': inventory});
       }
-    } else {
-      print("User data does not exist!");
+    }
+  }
+
+  Future<void> accessoryNameSetState(int id) async {
+    DocumentSnapshot accessoryData = await FirebaseFirestore.instance
+        .collection(' Accessory')
+        .doc('A0$id')
+        .get();
+    if (accessoryData.exists) {
+      setState(() {
+        local_img =
+            "accessories/${(accessoryData.data() as Map<String, dynamic>)['local_img']}";
+        accessoryName = (accessoryData.data() as Map<String, dynamic>)['name'];
+        _updateInventory('A0$id');
+      });
     }
   }
 
@@ -174,23 +219,19 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     if (turtleData.exists) {
       setState(() {
         // pull data form firebase
-        local_img = (turtleData.data() as Map<String, dynamic>)?['local_img'];
-        turtleName = (turtleData.data() as Map<String, dynamic>)?['name'];
+        local_img =
+            "turtle/${(turtleData.data() as Map<String, dynamic>)['local_img']}";
+        turtleName = (turtleData.data() as Map<String, dynamic>)['name'];
         _updateInventory('T0$id');
       });
       // update firebase with new turtle in inventory
       //_updateInventory('T0$id');
-    } else {
-      print("Turtle data does not exist!");
     }
   }
 
   void _resetState() {
-    print(_controller.status);
-
     if (_controllerTwo.status == AnimationStatus.completed) {
       setState(() {
-        _isAnimationActive = false;
         _showButton = true;
         _showFirstAnimation = true;
       });
@@ -229,7 +270,9 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
               Row(
                 children: [
                   IconButton(
-                      icon: Image.asset("assets/images/backpack.png"),
+                      iconSize: 10,
+                      icon: Image.asset(
+                          height: 35, width: 35, "assets/images/backpack.png"),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -238,7 +281,11 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                         );
                       }),
                   IconButton(
-                    icon: Image.asset("assets/images/inventory_icon.png"),
+                    iconSize: 10,
+                    icon: Image.asset(
+                        height: 35,
+                        width: 35,
+                        "assets/images/inventory_icon.png"),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -253,11 +300,23 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                     style: GoogleFonts.pressStart2p(
                       textStyle: const TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 14,
                       ),
                     ),
                   ),
-                  Image.asset("assets/images/home/coin.png")
+                  Image.asset(
+                      height: 35, width: 35, "assets/images/home/coin.png"),
+                  Text(
+                    //worm
+                    wormCount.toString(),
+                    style: GoogleFonts.pressStart2p(
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  Image.asset(height: 30, width: 30, "assets/images/worm.png")
                 ],
               )
               // Settings button
@@ -301,7 +360,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                               children: [
                                 Image.asset(
                                   "assets/images/home/coin.png",
-                                  height: 40,
+                                  height: 30,
                                 ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
@@ -327,66 +386,105 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
                           )),
                     )
                   ]),
-                if (!_showButton) // Show the Lottie animation when the button is not visible
-                  GestureDetector(
-                      onTap: () {
-                        print("activated");
+                if (!_showButton)
+                  Stack(alignment: Alignment.topCenter, children: [
+                    // Show the Lottie animation when the button is not visible
+                    GestureDetector(
+                        onTap: () {
+                          print("activated");
 
-                        _resetState();
-                      },
-                      child: _showFirstAnimation
-                          ? Lottie.asset("assets/gatcha.json",
-                              controller: _controller, onLoaded: (composition) {
-                              _controller
-                                ..duration = composition.duration
-                                ..forward();
-                            })
-                          : animationAsset == "assets/turtle.json"
-                              ? Stack(
-                                  // Stacks on turtle animation
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Lottie.asset(animationAsset,
-                                        controller: _controllerTwo,
-                                        onLoaded: (composition) {
-                                      _controllerTwo
-                                        ..duration = composition.duration
-                                        ..forward();
-                                    }),
-                                    Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/turtle/$local_img",
-                                            width: 200,
-                                            height: 180,
-                                            fit: BoxFit.contain,
-                                          ),
-                                          Text(
-                                            turtleName,
-                                            style: GoogleFonts.pressStart2p(
-                                              textStyle: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 18,
+                          _resetState();
+                        },
+                        child: _showFirstAnimation
+                            ? Lottie.asset("assets/gatcha.json",
+                                controller: _controller,
+                                onLoaded: (composition) {
+                                _controller
+                                  ..duration = composition.duration
+                                  ..forward();
+                              })
+                            : Stack(
+                                // Stacks on turtle animation
+                                alignment: Alignment.center,
+                                children: [
+                                  Lottie.asset(animationAsset,
+                                      controller: _controllerTwo,
+                                      onLoaded: (composition) {
+                                    _controllerTwo
+                                      ..duration = composition.duration
+                                      ..forward();
+                                  }),
+                                  gatchaResult == 1
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                              Image.asset(
+                                                "assets/images/$local_img",
+                                                width: 200,
+                                                height: 180,
+                                                fit: BoxFit.contain,
                                               ),
-                                            ),
-                                          )
-                                        ]),
-                                  ],
-                                )
-                              : Lottie.asset(animationAsset,
-                                  width: 900,
-                                  height: 900,
-                                  controller: _controllerTwo,
-                                  onLoaded: (composition) {
-                                  _controllerTwo
-                                    ..duration = composition.duration
-                                    ..forward();
-                                })
+                                              Text(
+                                                turtleName,
+                                                style: GoogleFonts.pressStart2p(
+                                                  textStyle: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              )
+                                            ])
+                                      : gatchaResult == 0
+                                          ? Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                  Image.asset(
+                                                    "assets/images/$local_img",
+                                                    width: 200,
+                                                    height: 180,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                  Text(
+                                                    accessoryName,
+                                                    style: GoogleFonts
+                                                        .pressStart2p(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ])
+                                          : Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                  Image.asset(
+                                                    "assets/images/worm.png",
+                                                    width: 200,
+                                                    height: 180,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                  Text(
+                                                    "Wormy Worm!",
+                                                    style: GoogleFonts
+                                                        .pressStart2p(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ])
+                                ],
+                              ))
 
-                      // The image is always displayed unless you want it to disappear too
-                      )
+                    // The image is always displayed unless you want it to disappear too
+                  ])
               ],
             ),
           ),

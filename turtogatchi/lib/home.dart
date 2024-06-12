@@ -76,6 +76,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _cleanTurtle() {
+    print("cleaning turtle poop");
     setState(() {
       _timeToPoop = false;
     });
@@ -178,10 +179,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
           //APPBAR
           appBar: AppBar(
-            
             backgroundColor: Colors.transparent,
-            elevation: 0, 
-            automaticallyImplyLeading: false,// Make AppBar transparent
+            elevation: 0,
+            automaticallyImplyLeading: false, // Make AppBar transparent
             title: const Text(
               "My Farm",
               style: TextStyle(fontFamily: "MarioRegular", fontSize: 24),
@@ -249,9 +249,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              // TURTLE TODO GET FROM DB THE TURTLE.
-              Expanded(
-                flex: 8,
+              SizedBox(
+                height: 375,
+                width: 375,
                 child: Align(
                     alignment: Alignment.center,
                     child: FutureBuilder<String>(
@@ -284,25 +284,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                     )),
               ),
-              Expanded(
-                  flex: 2,
-                  child: 
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Transform.scale(
-                        scale: 1, // Adjust the scale to make the IconButton smaller
-                        child: IconButton(
-                          iconSize: 10, // You can adjust this size if needed
-                          icon: Image.asset("assets/images/broom.png"),
-                          onPressed: () {
-                            print("Cleaning turtle now bitches");
-                          },
-                        ),
-                      ))),
-              
 
               /*
                 HOME BUTTON INCLUDES
+                1. CLEAN BUTTON
                 1. FEED BUTTON
                 2. EARN BUTTON
                 3. GATCHA BUTTON
@@ -313,7 +298,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      width: 115,
+                      width: 120,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.6),
                         borderRadius: const BorderRadius.only(
@@ -323,8 +308,43 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                       child: Column(
                         children: [
+                          // CLEAN BUTTON
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                              ),
+                              onPressed: () {
+                                // clean turtle
+                                _cleanTurtle();
+                              },
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    "assets/images/buttons/broom2.png",
+                                    height: 50,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 2.0),
+                                    child: Text(
+                                      "CLEAN",
+                                      style: GoogleFonts.pressStart2p(
+                                        textStyle: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 7,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                           // FEED BUTTON
-                          // TODO MAKE THIS FUNCTIONAL!!!
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: ElevatedButton(

@@ -66,7 +66,6 @@ class _EarnPopupState extends State<EarnPopup> {
   }
 
   Future<void> _loadAd() async {
-    print("ad coming right up");
     InterstitialAd.load(
       adUnitId: 'ca-app-pub-3940256099942544/1033173712', // Test ad unit ID
       request: AdRequest(),
