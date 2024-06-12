@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:lottie/lottie.dart';
 import 'package:turtogatchi/feeding/feeding_popup.dart';
+import 'package:turtogatchi/feeding/hunger_bar.dart';
 import 'package:turtogatchi/inventories/encyclopedia/encyclopedia_page.dart';
 import 'package:turtogatchi/inventories/inventory/inventory_page.dart';
 import 'package:turtogatchi/popups/earn_coin_popup.dart';
@@ -30,7 +31,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   var coins = 0;
   var inventory = [];
   var turtleSkin = "T01";
-  var hunger = 0;
+  double hunger = 0;
   var _isDirty = false;
   var _wormAnimation = false;
   var _cleaningAnimation = false;
@@ -125,6 +126,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     cron.schedule(Schedule.parse('*/1 * * * *'), () async {
       setState(() {
         _isDirty = true;
+        hunger--;
       });
     });
   }
@@ -320,6 +322,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ],
                 ),
               ),
+              HungerBar(hungerLevel: hunger),
               SizedBox(
                 height: 360,
                 width: 360,
