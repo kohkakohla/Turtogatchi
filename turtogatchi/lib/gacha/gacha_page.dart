@@ -221,7 +221,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
       setState(() {
         // pull data form firebase
         local_img =
-            "turtle/${(turtleData.data() as Map<String, dynamic>)['local_img']}";
+            "turtle/${(turtleData.data() as Map<String, dynamic>)['local_img']}.png";
         turtleName = (turtleData.data() as Map<String, dynamic>)['name'];
         _updateInventory('T0$id');
       });

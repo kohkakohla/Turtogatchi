@@ -32,9 +32,8 @@ class TurtleCard extends StatefulWidget {
 }
 
 class _TurtleCardState extends State<TurtleCard> {
-
   final user = FirebaseAuth.instance.currentUser;
-  
+
   String get id => widget.id;
   String get img => widget.img;
   String get name => widget.name;
@@ -84,7 +83,7 @@ class _TurtleCardState extends State<TurtleCard> {
               children: [
                 // TODO LOGO GOES HERE
                 Image.asset(
-                  "assets/images/turtle/$img",
+                  "assets/images/turtle/$img.png",
                   width: 100,
                   height: 75,
                   fit: BoxFit.contain,

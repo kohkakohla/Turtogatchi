@@ -78,7 +78,7 @@ class TurtleInformationPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Image.asset(
-                      "assets/images/local_img/$img",
+                      "assets/images/local_img/$img.png",
                     ),
                   ),
 

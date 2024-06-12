@@ -81,7 +81,7 @@ class _TurtleCardSwitchableState extends State<TurtleCardSwitchable> {
               children: [
                 // TODO LOGO GOES HERE
                 Image.asset(
-                  "assets/images/turtle/$img",
+                  "assets/images/turtle/$img.png",
                   width: 100,
                   height: 75,
                   fit: BoxFit.contain,

@@ -129,7 +129,24 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         .collection('Turtle')
         .doc(turtleSkin)
         .get();
-
+    final hatData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .collection('turtleState')
+        .doc('turtle')
+        .get();
+    if (hatData.exists) {
+      final hat = hatData.data()?['accessory'] ?? '';
+      if (hat == '') {
+        return doc.data()?['local_img'] + ".png" ?? '';
+      } else {
+        final hatName = await FirebaseFirestore.instance
+            .collection(' Accessory')
+            .doc(hat)
+            .get();
+        return doc.data()?['local_img'] + hatName.data()?['local_img'] ?? '';
+      }
+    }
     return doc.data()?['local_img'] ?? '';
   }
 
