@@ -33,7 +33,6 @@ class SplashScreenState extends State<SplashScreen> {
       player.open(
         Audio("assets/audio/test.mp3"),
         showNotification: true,
-        autoStart: true,
       );
       print("Setting loop mode");
       await player.setLoopMode(LoopMode.single);

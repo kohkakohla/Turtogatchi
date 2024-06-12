@@ -31,9 +31,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   var inventory = [];
   var turtleSkin = "T01";
   var hunger = 0;
-  var _timeToPoop = false;
+  var _isDirty = false;
   var _wormAnimation = false;
+  var _cleaningAnimation = false;
   late AnimationController _controller;
+  late AnimationController _controllerClean;
 
   @override
   void dispose() {
@@ -50,6 +52,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _getTurtleData();
     _scheduledPoop();
     _controller = AnimationController(vsync: this);
+    _controllerClean = AnimationController(vsync: this);
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -64,21 +67,35 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         });
       }
     });
+    _controllerClean.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Reset the controller
+        _controllerClean.reset();
+
+        // Update the state
+        setState(() {
+          // Set any state variables you need to update here
+          // For example, if you want to hide the worm animation
+          _isDirty = false;
+          _cleaningAnimation = false;
+        });
+      }
+    });
   }
 
   Future<void> _scheduledPoop() async {
     cron.schedule(Schedule.parse('*/1 * * * *'), () async {
       setState(() {
-        _timeToPoop = true;
+        _isDirty = true;
       });
-      print("time to poop hehe");
     });
   }
 
   void _cleanTurtle() {
     print("cleaning turtle poop");
     setState(() {
-      _timeToPoop = false;
+      _isDirty = false;
+      _cleaningAnimation = true;
     });
   }
 
@@ -266,8 +283,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ),
               SizedBox(
-                height: 375,
-                width: 375,
+                height: 360,
+                width: 360,
                 child: Align(
                     alignment: Alignment.center,
                     child: FutureBuilder<String>(
@@ -294,6 +311,19 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   _controller.forward();
                                 },
                               )
+                            else if (_isDirty)
+                              Image.asset("assets/images/poop.png")
+                            else if (_cleaningAnimation)
+                              Lottie.asset(
+                                "assets/clean.json",
+                                controller: _controllerClean,
+                                onLoaded: (composition) {
+                                  _controllerClean.duration =
+                                      composition.duration;
+                                  _controllerClean.forward();
+                                },
+                              )
+                            // do smth
                           ] // turtle sprite render
                               );
                         }
@@ -333,14 +363,21 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 shadowColor: Colors.transparent,
                               ),
                               onPressed: () {
-                                // clean turtle
-                                _cleanTurtle();
+                                if (_isDirty) {
+                                  _cleanTurtle();
+                                } else {
+                                  // dialoug box
+                                }
                               },
                               child: Column(
                                 children: [
-                                  Image.asset(
-                                    "assets/images/buttons/broom2.png",
-                                    height: 50,
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                    child: Image.asset(
+                                      "assets/images/buttons/toilet.png",
+                                      height: 50,
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -391,8 +428,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     height: 50,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                     child: Text(
                                       "FEED",
                                       style: GoogleFonts.pressStart2p(
@@ -432,8 +469,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     height: 50,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                     child: Text(
                                       "EARN",
                                       style: GoogleFonts.pressStart2p(
@@ -472,8 +509,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     height: 50,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 6.0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                     child: Text(
                                       "HATCH",
                                       style: GoogleFonts.pressStart2p(
