@@ -312,7 +312,35 @@ class LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                                     minimumSize: Size(328, 50),
                                   ),
                                   onPressed: () {
-                                    _signInWithGoogle();
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Google users are currently Bugged'),
+                                            content: const Text(
+                                                'Users are able to authenicate and automatically sign in via google api and their google accounts but users under the google provider are known to cause bugs after a while in app causing user to force sign out, or unable to authenicate with firestore after some time.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('Cancel'),
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // Close the dialog
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text('Continue'),
+                                                onPressed: () {
+                                                  // Proceed with Google Sign Up
+                                                  //_signUpWithGoogle();
+                                                  Navigator.of(context)
+                                                      .pop(); // Close the dialog
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                    // _signInWithGoogle();
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

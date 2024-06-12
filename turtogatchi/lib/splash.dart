@@ -45,7 +45,6 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void _stopAudioPlayer() async {
-    print("stopping audio player");
     await player.stop();
   }
 
@@ -53,7 +52,6 @@ class SplashScreenState extends State<SplashScreen> {
 
   //TODO ADD BACKGROUND MUSIC HERE
   Widget build(BuildContext context) {
-    print("Building splash screen");
     return Stack(
       children: <Widget>[
         Container(
