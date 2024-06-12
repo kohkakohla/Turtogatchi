@@ -40,7 +40,7 @@ class SignUpEmailPageState extends State<SignUpEmailPage> {
           .doc('turtle')
           .set({
         'current': 'T01',
-        'hunger': 5,
+        'hunger': 5.0,
       });
     }
 
