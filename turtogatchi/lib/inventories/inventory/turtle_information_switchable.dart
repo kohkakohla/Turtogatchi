@@ -300,10 +300,8 @@ class _TurtleInformationSwitchablePageState
                 setState(() {
                   updateSkinBackend(id);
                 });
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
