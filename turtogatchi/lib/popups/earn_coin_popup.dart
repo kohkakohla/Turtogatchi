@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EarnPopup extends StatefulWidget {
-  const EarnPopup({Key? key}) : super(key: key);
+  final VoidCallback onEarnedPressed;
+  // const EarnPopup({Key? key}) : super(key: key);
+  const EarnPopup({super.key, required this.onEarnedPressed});
 
   @override
   _EarnPopupState createState() => _EarnPopupState();
@@ -164,10 +167,18 @@ class _EarnPopupState extends State<EarnPopup> {
                       ),
                     ),
                   ),
-                  onPressed: _isAdLoaded
+                  onPressed: 
+                    _isAdLoaded
                       ? () {
-                          Navigator.pop(context);
+                          _ad?.fullScreenContentCallback = FullScreenContentCallback(
+                            onAdDismissedFullScreenContent: (Ad ad) {
+                              widget.onEarnedPressed;
+                            },
+                          );
                           _ad?.show();
+                          //widget.onEarnedPressed;
+                          Navigator.pop(context);
+                          widget.onEarnedPressed;
                           _ad = null;
                           _isAdLoaded = false;
                           showDialog(
