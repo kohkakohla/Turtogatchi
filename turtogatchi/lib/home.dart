@@ -104,7 +104,7 @@ class HomePageState extends State<HomePage>
     await player.open(Audio("assets/audio/test.mp3"));
     await player.setLoopMode(LoopMode.single);
     await player.play();
-    player.setVolume(0.5);
+    player.setVolume(0);
     player2.setVolume(1);
     player3.setVolume(1);
     player4.setVolume(1);
@@ -585,10 +585,14 @@ class HomePageState extends State<HomePage>
                                 shadowColor: Colors.transparent,
                               ),
                               onPressed: () {
+                                _stopMusic();
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return const EarnPopup();
+                                    return EarnPopup(onEarnedPressed: () { 
+                                      print("Earned Pressed");
+                                      _stopMusic();
+                                     },);
                                   },
                                 );
                               },

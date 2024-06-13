@@ -74,6 +74,7 @@ class SplashScreenState extends State<SplashScreen>
         Audio("assets/audio/test.mp3"),
         showNotification: true,
       );
+      player.setVolume(0.3);
       print("Setting loop mode");
       await player.setLoopMode(LoopMode.single);
       print("Playing background music");
@@ -144,7 +145,7 @@ class SplashScreenState extends State<SplashScreen>
                         ),
                       ),
                       onPressed: () {
-                        _killAudio();
+                        //_killAudio();
                         Navigator.pushNamed(context, '/login');
                       },
                       child: const Padding(
