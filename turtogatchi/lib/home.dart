@@ -298,7 +298,7 @@ class HomePageState extends State<HomePage>
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            automaticallyImplyLeading: false, // Make AppBar transparent
+            automaticallyImplyLeading: true, // Make AppBar transparent
             title: const Text(
               "My Farm",
               style: TextStyle(fontFamily: "MarioRegular", fontSize: 24),
@@ -589,10 +589,12 @@ class HomePageState extends State<HomePage>
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return EarnPopup(onEarnedPressed: () { 
-                                      print("Earned Pressed");
-                                      _stopMusic();
-                                     },);
+                                    return EarnPopup(
+                                      onEarnedPressed: () {
+                                        print("Earned Pressed");
+                                        _stopMusic();
+                                      },
+                                    );
                                   },
                                 );
                               },

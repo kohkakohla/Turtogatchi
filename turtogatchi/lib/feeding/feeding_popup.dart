@@ -24,7 +24,6 @@ class _FeedingPopupState extends State<FeedingPopup> {
   var worms = 0;
   bool _enoughCoins = false;
   bool _wormsToFeed = false;
-  
 
   @override
   void initState() {
@@ -33,7 +32,7 @@ class _FeedingPopupState extends State<FeedingPopup> {
     _getUserWormCount();
     if (widget.coins >= 2) {
       _enoughCoins = true;
-    } 
+    }
   }
 
   Future<void> _updateCoins() async {
@@ -41,14 +40,11 @@ class _FeedingPopupState extends State<FeedingPopup> {
       if (widget.coins >= 2) {
         var coins = widget.coins - 2;
         await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user?.uid)
-          .update({'coins': coins});
-        
-      } 
-      
-    }
-    else {
+            .collection('users')
+            .doc(user?.uid)
+            .update({'coins': coins});
+      }
+    } else {
       setState(() {
         worms -= 1;
         if (worms == 0) {
@@ -56,12 +52,12 @@ class _FeedingPopupState extends State<FeedingPopup> {
         } else {
           _wormsToFeed = true;
         }
-      }); 
+      });
     }
     await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user?.uid)
-          .update({'wormCount': worms});
+        .collection('users')
+        .doc(user?.uid)
+        .update({'wormCount': worms});
   }
 
   Future<void> _getUserWormCount() async {
@@ -77,7 +73,7 @@ class _FeedingPopupState extends State<FeedingPopup> {
             _wormsToFeed = true;
           }
         });
-      } 
+      }
     }
   }
 
@@ -155,20 +151,17 @@ class _FeedingPopupState extends State<FeedingPopup> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          
           //HEADER
           Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Feed Your Turtle!",
-                  style: GoogleFonts.pressStart2p(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Feed Your Turtle!",
+              style: GoogleFonts.pressStart2p(
+                fontSize: 16,
+                color: Colors.black,
               ),
-          
-  
+            ),
+          ),
 
           // SUBHEADER
 
@@ -179,107 +172,108 @@ class _FeedingPopupState extends State<FeedingPopup> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  style: ButtonStyle(
-                    fixedSize:
-                        WidgetStateProperty.all<Size>(const Size(125, 175)),
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                      Colors.white,
-                    ),
-                    elevation: WidgetStateProperty.all<double>(8.0),
-                    shape: WidgetStateProperty.all<OutlinedBorder>(
-                      const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                    style: ButtonStyle(
+                      fixedSize:
+                          WidgetStateProperty.all<Size>(const Size(125, 175)),
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                        Colors.white,
+                      ),
+                      elevation: WidgetStateProperty.all<double>(8.0),
+                      shape: WidgetStateProperty.all<OutlinedBorder>(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      hunger += 1;
-                      updateHungerBackend(hunger);
-                      // update backend coins
-                      if (_enoughCoins) {
-                        _updateCoins();
-                        Navigator.pop(context);
-                        widget.onFeedPressed();
-                      }
-                      else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Not enough coins!'),
-                              content: Text('Hurry and earn more coins so you can feed!'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // Dismiss the dialog
-                                  },
-                                  child: Text('Close'),
+                    onPressed: () {
+                      setState(() {
+                        hunger += 1;
+                        updateHungerBackend(hunger);
+                        // update backend coins
+                        if (_enoughCoins) {
+                          _updateCoins();
+                          Navigator.pop(context);
+                          widget.onFeedPressed();
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Not enough coins!'),
+                                content: Text(
+                                    'Hurry and earn more coins so you can feed!'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Dismiss the dialog
+                                    },
+                                    child: Text('Close'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      });
+                    },
+                    child: _wormsToFeed
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "FEED",
+                                style: GoogleFonts.pressStart2p(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                      
-                    });
-                  },
-                  child: 
-                  _wormsToFeed
-                  ? Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "FEED",
-                        style: GoogleFonts.pressStart2p(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                          worms.toString() + " Worms",
-                          style: GoogleFonts.pressStart2p(
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Image.asset("assets/images/worm.png"),
-                    ],
-                  )
-                  : Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "FEED",
-                        style: GoogleFonts.pressStart2p(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                        Text(
-                          "2 coins",
-                          style: GoogleFonts.pressStart2p(
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                            color: _enoughCoins ?Colors.black : Colors.red[400],
-                          ),
-                        ),
-                        Image.asset("assets/images/home/coin.png",
-                        width: 20,
-                        height: 20,
-                        ),
-                        ],
-                        ),
-                        Image.asset("assets/images/worm.png"),
-                    ],
-                  )
-                ),
+                              ),
+                              Text(
+                                worms.toString() + " Worms",
+                                style: GoogleFonts.pressStart2p(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Image.asset("assets/images/worm.png"),
+                            ],
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "FEED",
+                                style: GoogleFonts.pressStart2p(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "2 coins",
+                                    style: GoogleFonts.pressStart2p(
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                      color: _enoughCoins
+                                          ? Colors.black
+                                          : Colors.red[400],
+                                    ),
+                                  ),
+                                  Image.asset(
+                                    "assets/images/home/coin.png",
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                              Image.asset("assets/images/worm.png"),
+                            ],
+                          )),
               ),
             ],
           ),

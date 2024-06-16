@@ -171,7 +171,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
     var output = rng.nextInt(100);
     if (mounted) {
       // 20% chance of getting a turtle
-      if (output < 20) {
+      if (output < 30) {
         setState(() {
           animationAsset = "assets/itemPulled.json";
 
@@ -180,7 +180,7 @@ class GachaPageState extends State<GachaPage> with TickerProviderStateMixin {
           turtleResult = rng.nextInt(4) + 1;
         });
         turtleNameSetState(turtleResult);
-      } else if (output < 70 && output >= 20) {
+      } else if (output < 70 && output >= 30) {
         // setState(() {
         //   animationAsset = "assets/itemPulled.json";
         //   gatchaResult = 2;
