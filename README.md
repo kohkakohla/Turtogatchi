@@ -25,7 +25,9 @@
 
 ## Overview
 
-This project is a full-stack volunteer management website developed for BigAtHeart, aimed at educating and informing visitors about the organization, its initiatives, and how they can get involved. The website aims to inspire and retain volunteers while providing easy sign-up access and administrative management.
+Turtogotchi is an innovative, gamified solution to mitigate biodiversity loss by connecting digital users with real-world conservation efforts.
+
+Developed during the DSTA BrainHack 2024, Turtogotchi is a mobile application inspired by the classic Tamagotchi mechanics. The project was born from a mission to support a local Singaporean turtle museum facing financial hardship. By lowering the barrier to entry for conservation, we created a platform where "digital care" translates into "physical support."
 
 ## Front End
 
